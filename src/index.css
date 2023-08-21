@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+body{
+    background-color: red;
+    padding: 20px;
+}
+.marker{
+    background-image: url("../public/image/marker.png");
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    background-repeat: no-repeat;
+    background-size: contain;
+}

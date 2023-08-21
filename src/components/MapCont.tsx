@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import * as tt from "@tomtom-international/web-sdk-maps";
 import "@tomtom-international/web-sdk-maps/dist/maps.css"
 import { TMapContent } from "./type";
+import useAddmaker from "./hooks/useAddmaker";
 
 const apiKey = import.meta.env.VITE_API_MAP_KEY;
 
@@ -10,6 +11,7 @@ const MapCont = () => {
   const [latitude, setLatitude] = useState<number>(6.5244);
   const [longitude, setlongitude] = useState<number>(3.3792);
   const divRef = useRef<HTMLDivElement | null>(null!);
+  const{ addmarker} = useAddmaker({setLong:setlongitude, setLat: setLatitude})
 
   useEffect(() => {
 
@@ -27,7 +29,8 @@ const MapCont = () => {
       setMap(map);
       map.addControl(new tt.FullscreenControl());
         map.addControl(new tt.NavigationControl());
-  }, []);
+        addmarker()
+  }, [latitude, longitude]);
 
   return (
     <div className="w-full h-full" id="map">
