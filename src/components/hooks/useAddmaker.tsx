@@ -7,6 +7,7 @@ type markerProp = {
   element: HTMLElement | null;
 };
 
+
 const useAddmaker = ({
   setDragedLngLat,
   longitude,
@@ -14,6 +15,7 @@ const useAddmaker = ({
   element,
 }: markerProp) => {
   const addmarker = (map: tt.Map): void => {
+    const popupFunc = new tt.Popup({offset:[0, -25]}).setHTML("This is you")
     const marker = new tt.Marker({
       draggable: true,
       element: element!,
@@ -24,6 +26,7 @@ const useAddmaker = ({
       const LngLat: tt.LngLat = marker.getLngLat();
       setDragedLngLat(LngLat);
     });
+    marker.setPopup(popupFunc).togglePopup()
   };
 
   return { addmarker };
