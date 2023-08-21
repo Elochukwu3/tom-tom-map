@@ -3,8 +3,11 @@
         key : string,
         container: HTMLElement | string,
         zoom: number,
-        latitude: number,
-        longitude: number,
+        center:[number, number],
+        stylesVisibility: {
+            trafficIncidents: boolean,
+            trafficFlow: boolean,
+          };
     }
 
     export type {TMapContent}

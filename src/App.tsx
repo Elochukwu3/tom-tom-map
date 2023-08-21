@@ -8,7 +8,7 @@ function App() {
 
   return (
     <>
-      <div className="bg-blu00">
+      <div className="m-0 p-0 h-screen">
         {/* <h1 className="text-3xl font-extrabold capitalize break-words w-10/12">
           lets build a map interface with TOMTOM
         </h1> */}
