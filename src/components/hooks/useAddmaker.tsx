@@ -1,31 +1,32 @@
 import * as tt from "@tomtom-international/web-sdk-maps";
 
 type markerProp = {
-    setLong: React.Dispatch<React.SetStateAction<number>>,
-    setLat: React.Dispatch<React.SetStateAction<number>>,
-   
-}
+  setDragedLngLat: React.Dispatch<React.SetStateAction<object>>;
+  longitude: number;
+  latitude: number;
+  element: HTMLElement | null;
+};
 
-const useAddmaker = ({setLong, setLat}: markerProp) => {
-    const addmarker = ():void=>{
-  const element:HTMLElement = document.createElement("div")
-    element.className = 'h-10 w-10 bg-red-900 marker';
-
+const useAddmaker = ({
+  setDragedLngLat,
+  longitude,
+  latitude,
+  element,
+}: markerProp) => {
+  const addmarker = (map: tt.Map): void => {
     const marker = new tt.Marker({
-        draggable: true,
-        element: element
+      draggable: true,
+      element: element!,
     })
-    marker.on("dragend", ():void=>{
-        const LngLat:tt.LngLat  = marker.getLngLat()
-        setLong(LngLat.lng)
-        setLat(LngLat.lat)
-        console.log(LngLat, element) ;
-        
-    })
-    console.log(element, marker);
-    }
-    
-  return {addmarker}
-}
+      .setLngLat([longitude, latitude])
+      .addTo(map);
+    marker.on("dragend", (): void => {
+      const LngLat: tt.LngLat = marker.getLngLat();
+      setDragedLngLat(LngLat);
+    });
+  };
 
-export default useAddmaker
+  return { addmarker };
+};
+
+export default useAddmaker;

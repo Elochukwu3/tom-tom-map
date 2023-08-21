@@ -7,11 +7,12 @@ import useAddmaker from "./hooks/useAddmaker";
 const apiKey = import.meta.env.VITE_API_MAP_KEY;
 
 const MapCont = () => {
-  const [map, setMap] = useState<tt.Map | null>(null);
+  const [myMap, setMyMap] = useState<tt.Map | null>(null);
   const [latitude, setLatitude] = useState<number>(6.5244);
+  const [dragedLngLat, setDragedLngLat] = useState<object>({});
   const [longitude, setlongitude] = useState<number>(3.3792);
   const divRef = useRef<HTMLDivElement | null>(null!);
-  const{ addmarker} = useAddmaker({setLong:setlongitude, setLat: setLatitude})
+  const{ addmarker} = useAddmaker({setDragedLngLat, longitude, latitude, element:divRef?.current})
 
   useEffect(() => {
 
@@ -26,15 +27,17 @@ const MapCont = () => {
         }
       };
       const map = tt.map(mapOptions);
-      setMap(map);
+      setMyMap(myMap);
+      addmarker(map)
+      console.log(dragedLngLat);
+      
       map.addControl(new tt.FullscreenControl());
         map.addControl(new tt.NavigationControl());
-        addmarker()
-  }, [latitude, longitude]);
+  }, [latitude, longitude, dragedLngLat]);
 
   return (
     <div className="w-full h-full" id="map">
-      MapCont
+      <div className="marker" ref={divRef}></div>
     </div>
   );
 };
