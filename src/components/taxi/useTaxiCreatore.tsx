@@ -8,20 +8,39 @@ const useTaxiCreatore = () => {
 
   function setDefaultTaxiConfig() {
     taxiArray = [
-      createTaxi("CAR #1", "#006967", [4.902642, 52.373627], "../../../public/image/cab-1.jpeg"),
-      createTaxi("CAR #2", "#EC619F", [4.927198, 52.365927], "../../../public/image/cab-2.jpeg"),
-      createTaxi("CAR #3", "#002C5E", [4.893488, 52.347878], "../../../public/image/cab-1.png"),
-      createTaxi("CAR #4", "#F9B023", [4.858433, 52.349447], "../../../public/image/cab-1.png"),
+      createTaxi("CAR #1", "#006967", [4.9041, 52.3676], "/image/cab-1.jpeg"),
+      createTaxi(
+        "CAR #2",
+        "#EC619F",
+        [4.927198, 52.365927],
+        "/image/cab-2.jpeg"
+      ),
+      createTaxi(
+        "CAR #3",
+        "#002C5E",
+        [4.893488, 52.347878],
+        "/image/cab-3.png"
+      ),
+      createTaxi(
+        "CAR #4",
+        "#F9B023",
+        [4.858433, 52.349447],
+        "/image/cab-4.png"
+      ),
     ];
   }
   const handleTaxi = (map: tt.Map): void => {
-      setDefaultTaxiConfig();
+    setDefaultTaxiConfig();
     taxiArray.forEach(function (taxi) {
       const carMarkerElement = document.createElement("div");
       carMarkerElement.innerHTML = taxi.icon;
-      new tt.Marker({ element: carMarkerElement, offset: [0, 27] })
-        .setLngLat(taxi.coordinates)
-        .addTo(map);
+
+      const marker = new tt.Marker({
+        element: carMarkerElement,
+        offset: [0, 27],
+      });
+      marker.setLngLat(taxi.coordinates);
+      marker.addTo(map);
     });
   };
 

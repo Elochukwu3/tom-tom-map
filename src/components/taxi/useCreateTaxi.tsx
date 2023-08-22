@@ -6,21 +6,14 @@ const useCreateTaxi = () => {
     color: string,
     coordinates: [number, number],
     iconFilePath: string,
-    iconWidth = 11,
-    iconHeight = 10
+    iconWidth = 61,
+    iconHeight = 40
   ): taxiProp => {
     return {
       name: name,
       color: color,
       coordinates: coordinates,
-      icon:
-        "<img src=" +
-        iconFilePath +
-        " style='width: " +
-        iconWidth +
-        "px; height: " +
-        iconHeight +
-        "px;'>",
+      icon:`<img src="${iconFilePath}" style="width:${iconWidth}px; height: ${iconHeight}px;"/>,`
     };
   };
   return createTaxi;

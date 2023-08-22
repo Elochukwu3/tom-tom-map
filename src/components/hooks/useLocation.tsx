@@ -5,8 +5,8 @@ export type locationObject = Record<locator, number>;
 
 const useLocation = (): locationObject => {
   const [location, setLocation] = useState<locationObject>({
-    lat: 6.5244,
-    long: 3.3792,
+    lat: 52.3676,
+    long: 4.9041,
   });
 
   useEffect(() => {
