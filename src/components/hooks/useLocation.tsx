@@ -1,17 +1,29 @@
 import { useState, useEffect } from "react";
 
-const useLocation = (): object => {
-  const [location, setLocation] = useState<object>({});
+type locator = "lat" | "long";
+export type locationObject = Record<locator, number>;
+
+const useLocation = (): locationObject => {
+  const [location, setLocation] = useState<locationObject>({
+    lat: 6.5244,
+    long: 3.3792,
+  });
 
   useEffect(() => {
     const navigatorFunc = (): void => {
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((position) => {
-          const { latitude, longitude } = position.coords;
-          setLocation({ latitude, longitude });
-        });
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            setLocation({ lat: latitude, long: longitude });
+            console.log(position.coords);
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
       } else {
-        setLocation({ latitude: 6.5244, longitude: 3.3792 });
+        // setLocation({ lat: 6.5244, long: 3.3792 });
       }
     };
     navigatorFunc();
