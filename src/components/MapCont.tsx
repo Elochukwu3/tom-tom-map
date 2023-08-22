@@ -4,12 +4,13 @@ import "@tomtom-international/web-sdk-maps/dist/maps.css";
 import { TMapContent } from "./type";
 import useAddmaker from "./hooks/useAddmaker";
 import useLocation, {locationObject} from "./hooks/useLocation";
+import useTaxiCreatore from "./taxi/useTaxiCreatore";
 
 const apiKey = import.meta.env.VITE_API_MAP_KEY;
 
 const MapCont = () => {
     const location:locationObject = useLocation()
-    
+   const {handleTaxi}= useTaxiCreatore()
   const [myMap, setMyMap] = useState<tt.Map | null>(null);
   const [dragedLngLat, setDragedLngLat] = useState<object>({});
 
@@ -37,6 +38,7 @@ const MapCont = () => {
       const map = tt.map(mapOptions);
       addmarker(map);
       setMyMap(map);
+      
   
       map.addControl(new tt.FullscreenControl());
       map.addControl(new tt.NavigationControl());
@@ -47,6 +49,7 @@ const MapCont = () => {
         .addTo(map)
         staticIndicator.getElement().className = "marker"
         console.log(myMap, dragedLngLat);
+        handleTaxi(map)
         
    }
    

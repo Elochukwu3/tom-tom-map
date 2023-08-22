@@ -22,11 +22,11 @@ const useLocation = (): locationObject => {
             console.log(error);
           }
         );
-      } 
+      } else {
+        setLocation({ lat: 52.3676, long: 4.9041});
+      }
     };
     navigatorFunc();
-
-
   }, []);
 
   return location;
