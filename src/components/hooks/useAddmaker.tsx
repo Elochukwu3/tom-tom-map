@@ -5,14 +5,15 @@ type markerProp = {
   setDragedLngLat: React.Dispatch<React.SetStateAction<object>>;
   position?: [number, number] | undefined;
   element: HTMLElement | null;
+  map?: tt.Map | undefined | null
 };
 
 type func = {
-  mapClick: (event: tt.MapMouseEvent<"click">, apiKey: string) => void;
+  mapClick: (event: tt.MapMouseEvent<"click">, apiKey: string,  map: tt.Map) => void;
 };
 
-const useAddmaker = ({ setDragedLngLat, element }: markerProp): func => {
-  let destinationMarker: tt.Marker;
+let destinationMarker: tt.Marker;
+const useAddmaker = ({ setDragedLngLat, position, element, map }: markerProp): func => {
   const addmarker = (
     map: tt.Map,
     popup: tt.Popup,
@@ -26,9 +27,9 @@ const useAddmaker = ({ setDragedLngLat, element }: markerProp): func => {
       .setPopup(popup)
       .addTo(map);
   };
-  //   destinationMarker = addmarker(map,  new tt.Popup({ offset: 35 }).setHTML(
-  //     "Click anywhere on the map to change passenger location."
-  //   ))
+    destinationMarker = addmarker(map!,  new tt.Popup({ offset: 35 }).setHTML(
+      "Click anywhere on the map to change passenger location."
+    ), position!)
   function drawPassengerMarkerOnMap(geoResponse: any, map: tt.Map) {
     if (
       geoResponse &&
@@ -49,7 +50,7 @@ const useAddmaker = ({ setDragedLngLat, element }: markerProp): func => {
   const mapClick = (
     event: tt.MapMouseEvent<"click">,
     apiKey: string,
-    map: tt.Map
+    map: tt.Map,
   ) => {
     const position = event.lngLat;
     setDragedLngLat(position);

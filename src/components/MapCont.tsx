@@ -16,8 +16,10 @@ const MapCont = () => {
 
   const divRef = useRef<HTMLDivElement | null>(null!);
   const {mapClick } = useAddmaker({
-    setDragedLngLat,
+      setDragedLngLat,
+     position: [location.long, location.lat],
     element: divRef?.current,
+    map:myMap
   });
 
   useEffect(() => {
