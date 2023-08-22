@@ -15,10 +15,8 @@ const MapCont = () => {
   const [dragedLngLat, setDragedLngLat] = useState<object>({});
 
   const divRef = useRef<HTMLDivElement | null>(null!);
-  const { addmarker } = useAddmaker({
+  const {mapClick } = useAddmaker({
     setDragedLngLat,
-    longitude:location.long,
-    latitude: location.lat,
     element: divRef?.current,
   });
 
@@ -36,10 +34,8 @@ const MapCont = () => {
         },
       };
       const map = tt.map(mapOptions);
-      addmarker(map);
       setMyMap(map);
       
-  
       map.addControl(new tt.FullscreenControl());
       map.addControl(new tt.NavigationControl());
   
@@ -50,6 +46,9 @@ const MapCont = () => {
         staticIndicator.getElement().className = "marker"
         console.log(myMap, dragedLngLat);
         handleTaxi(map)
+        map.on("click", (event)=>{
+            mapClick(event, apiKey,map )
+        })
         
    }
    
@@ -58,7 +57,7 @@ const MapCont = () => {
 
   return (
     <div className="w-full h-full" id="map">
-            <div className="marker" ref={divRef}></div>
+            <div className="marker static mx-auto" ref={divRef}></div>
           </div>
   );
 };

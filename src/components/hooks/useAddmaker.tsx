@@ -1,35 +1,69 @@
 import * as tt from "@tomtom-international/web-sdk-maps";
+import * as ttServices from "@tomtom-international/web-sdk-services";
 
 type markerProp = {
   setDragedLngLat: React.Dispatch<React.SetStateAction<object>>;
-  longitude: number;
-  latitude: number;
+  position?: [number, number] | undefined;
   element: HTMLElement | null;
 };
 
+type func = {
+  mapClick: (event: tt.MapMouseEvent<"click">, apiKey: string) => void;
+};
 
-const useAddmaker = ({
-  setDragedLngLat,
-  longitude,
-  latitude,
-  element,
-}: markerProp) => {
-  const addmarker = (map: tt.Map): void => {
-    const popupFunc = new tt.Popup({offset:[0, -25]}).setHTML("This is you")
-    const marker = new tt.Marker({
-      draggable: true,
+const useAddmaker = ({ setDragedLngLat, element }: markerProp): func => {
+  let destinationMarker: tt.Marker;
+  const addmarker = (
+    map: tt.Map,
+    popup: tt.Popup,
+    position: [number, number]
+  ): tt.Marker => {
+    return new tt.Marker({
+      draggable: false,
       element: element!,
     })
-      .setLngLat([longitude, latitude])
+      .setLngLat(position)
+      .setPopup(popup)
       .addTo(map);
-    marker.on("dragend", (): void => {
-      const LngLat: tt.LngLat = marker.getLngLat();
-      setDragedLngLat(LngLat);
-    });
-    marker.setPopup(popupFunc).togglePopup()
+  };
+  //   destinationMarker = addmarker(map,  new tt.Popup({ offset: 35 }).setHTML(
+  //     "Click anywhere on the map to change passenger location."
+  //   ))
+  function drawPassengerMarkerOnMap(geoResponse: any, map: tt.Map) {
+    if (
+      geoResponse &&
+      geoResponse.addresses &&
+      geoResponse.addresses[0].address.freeformAddress
+    ) {
+      destinationMarker.remove();
+      destinationMarker = addmarker(
+        map,
+        new tt.Popup({ offset: 35 }).setHTML(
+          geoResponse.addresses[0].address.freeformAddress
+        ),
+        geoResponse.addresses[0].position
+      );
+      destinationMarker.togglePopup();
+    }
+  }
+  const mapClick = (
+    event: tt.MapMouseEvent<"click">,
+    apiKey: string,
+    map: tt.Map
+  ) => {
+    const position = event.lngLat;
+    setDragedLngLat(position);
+    ttServices.services
+      .reverseGeocode({
+        key: apiKey,
+        position: position,
+      })
+      .then(function (results: any) {
+        drawPassengerMarkerOnMap(results, map);
+      });
   };
 
-  return { addmarker };
+  return { mapClick };
 };
 
 export default useAddmaker;
