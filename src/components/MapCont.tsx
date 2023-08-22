@@ -11,7 +11,6 @@ const MapCont = () => {
     const location:locationObject = useLocation()
   const [myMap, setMyMap] = useState<tt.Map | null>(null);
   const [dragedLngLat, setDragedLngLat] = useState<object>({});
-  const [loader, setLoader] = useState<Boolean>(true);
 
   const divRef = useRef<HTMLDivElement | null>(null!);
   const { addmarker } = useAddmaker({
@@ -34,7 +33,6 @@ const MapCont = () => {
           trafficFlow: true,
         },
       };
-      setLoader(false);
       const map = tt.map(mapOptions);
       addmarker(map);
       setMyMap(map);

@@ -8,7 +8,6 @@ const useLocation = (): locationObject => {
     lat: 6.5244,
     long: 3.3792,
   });
-  const [isAccess, setIsAcess] = useState(Boolean)
 
   useEffect(() => {
     const navigatorFunc = (): void => {
@@ -21,22 +20,14 @@ const useLocation = (): locationObject => {
           },
           (error) => {
             console.log(error);
-            setIsAcess(true)
           }
         );
-      } else {
-            setIsAcess(true)
-        // setLocation({ lat: 6.5244, long: 3.3792 });
-      }
+      } 
     };
     navigatorFunc();
 
 
   }, []);
-
-  const giveLocationAccess = ():void=>{
-
-  }
 
   return location;
 };
