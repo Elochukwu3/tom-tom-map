@@ -45,6 +45,8 @@ const MapCont = () => {
         }).setLngLat( [location.long, location.lat])
         .addTo(map)
         staticIndicator.getElement().className = "marker"
+        console.log(myMap, dragedLngLat);
+        
    }
    
   }, [ location]);
