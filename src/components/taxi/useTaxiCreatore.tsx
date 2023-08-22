@@ -2,16 +2,16 @@ import { taxiProp } from "./type";
 import useCreateTaxi from "./useCreateTaxi";
 import * as tt from "@tomtom-international/web-sdk-maps";
 
-const TaxiCreatore = () => {
+const useTaxiCreatore = () => {
   let taxiArray: taxiProp[] = [];
   const createTaxi = useCreateTaxi();
 
   function setDefaultTaxiConfig() {
     taxiArray = [
-      createTaxi("CAR #1", "#006967", [4.902642, 52.373627], "img/cab1.png"),
-      createTaxi("CAR #2", "#EC619F", [4.927198, 52.365927], "img/cab2.png"),
-      createTaxi("CAR #3", "#002C5E", [4.893488, 52.347878], "img/cab3.png"),
-      createTaxi("CAR #4", "#F9B023", [4.858433, 52.349447], "img/cab4.png"),
+      createTaxi("CAR #1", "#006967", [4.902642, 52.373627], "../../../public/image/cab-1.jpeg"),
+      createTaxi("CAR #2", "#EC619F", [4.927198, 52.365927], "../../../public/image/cab-2.jpeg"),
+      createTaxi("CAR #3", "#002C5E", [4.893488, 52.347878], "../../../public/image/cab-1.png"),
+      createTaxi("CAR #4", "#F9B023", [4.858433, 52.349447], "../../../public/image/cab-1.png"),
     ];
   }
   const handleTaxi = (map: tt.Map): void => {
@@ -28,4 +28,4 @@ const TaxiCreatore = () => {
   return { handleTaxi, setDefaultTaxiConfig };
 };
 
-export default TaxiCreatore;
+export default useTaxiCreatore;

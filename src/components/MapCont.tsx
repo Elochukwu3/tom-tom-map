@@ -9,6 +9,7 @@ const apiKey = import.meta.env.VITE_API_MAP_KEY;
 
 const MapCont = () => {
     const location:locationObject = useLocation()
+    
   const [myMap, setMyMap] = useState<tt.Map | null>(null);
   const [dragedLngLat, setDragedLngLat] = useState<object>({});
 
