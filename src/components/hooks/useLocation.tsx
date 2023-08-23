@@ -19,7 +19,7 @@ const useLocation = (): locationObject => {
             // console.log(position.coords);
           },
           (error) => {
-            // console.log(error);
+            console.log(error);
           }
         );
       } else {
