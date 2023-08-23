@@ -5,8 +5,8 @@ import useTaxiCreatore from "./useTaxiCreatore";
 const useRoutes = () => {
   const { handleTaxi, setDefaultTaxiConfig, taxiArray } = useTaxiCreatore();
   let routes: [] = [];
-  const routeWeight = 9;
-  const routeBackgroundWeight = 12;
+  const routeWeight = '9';
+  const routeBackgroundWeight = '12';
 
   function clear(map: tt.Map, passengerMarker: tt.Marker) {
     routes.forEach(function (child) {
@@ -52,29 +52,58 @@ const useRoutes = () => {
       try {
         const result = await calRoute;
         console.log(result);
-      } catch (error) {}
+        result.batchItems.forEach(function (singleRoute:any, index) {
+            const routeGeoJson = singleRoute.toGeoJson()
+            const route:string[] = []
+            const route_background_layer_id = "route_background_" + index
+            const route_layer_id = "route_" + index
+            map
+            .addLayer(
+          buildStyle(
+                route_background_layer_id,
+                routeGeoJson,
+                "black",
+                routeBackgroundWeight
+              )
+            )
+            .addLayer(
+              buildStyle(
+                route_layer_id,
+                routeGeoJson,
+                taxiArray[index].color,
+                routeWeight
+              )
+            )
+  
+          route[0] = route_background_layer_id
+          route[1] = route_layer_id
+        //   routes[index] = route
+      } catch (error) {
+        console.log(error)
+      }
     };
+    drawAllRoute()
   }
 
-  // function buildStyle(id:string, data:string, color:string, width:string) {
-  //   return {
-  //     id: id,
-  //     type: "line",
-  //     source: {
-  //       type: "geojson",
-  //       data: data,
-  //     },
-  //     paint: {
-  //       "line-color": color,
-  //       "line-width": width,
-  //     },
-  //     layout: {
-  //       "line-cap": "round",
-  //       "line-join": "round",
-  //     },
-  //   }
-  // }
-  //   }
+  function buildStyle(id:string, data:string, color:string, width:string):tt.Layer {
+    return {
+      id: id,
+      type: "line",
+      source: {
+        type: "geojson",
+        data: data,
+      },
+      paint: {
+        "line-color": color,
+        "line-width": width,
+      },
+      layout: {
+        "line-cap": "round",
+        "line-join": "round",
+      },
+    }
+  }
+    }
   return { submitButtonHandler };
 };
 
