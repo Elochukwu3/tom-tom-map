@@ -20,7 +20,7 @@ const MapCont = () => {
     element: divRef?.current,
   });
   let destinationMarker: tt.Marker;
-  
+
   useEffect(() => {
     if (location) {
       const mapOptions: TMapContent = {
@@ -47,8 +47,13 @@ const MapCont = () => {
       staticIndicator.getElement().className = "marker";
       console.log(myMap, dragedLngLat);
       handleTaxi(map);
+
+ destinationMarker = addmarker(map,  new tt.Popup({ offset: 35 }).setHTML(
+    "click on any part of the map"
+  ),[location.long, location.lat]);
+
       map.on("click", (event) => {
-        mapClick(event, apiKey, map);
+        mapClick(event, apiKey, map,  destinationMarker);
       });
     }
   }, [location]);
