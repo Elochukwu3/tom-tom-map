@@ -5,15 +5,24 @@ type markerProp = {
   setDragedLngLat: React.Dispatch<React.SetStateAction<object>>;
   position?: [number, number] | undefined;
   element: HTMLElement | null;
-  map?: tt.Map | undefined | null
+  map?: tt.Map | undefined | null;
 };
 
 type func = {
-  mapClick: (event: tt.MapMouseEvent<"click">, apiKey: string,  map: tt.Map) => void;
+  mapClick: (
+    event: tt.MapMouseEvent<"click">,
+    apiKey: string,
+    map: tt.Map,
+    destinationMarke: tt.Marker
+  ) => void;
+  addmarker: (
+    map: tt.Map,
+    popup: tt.Popup,
+    position: [number, number]
+  ) => tt.Marker;
 };
 
-let destinationMarker: tt.Marker;
-const useAddmaker = ({ setDragedLngLat, position, element, map }: markerProp): func => {
+const useAddmaker = ({ setDragedLngLat, element }: markerProp): func => {
   const addmarker = (
     map: tt.Map,
     popup: tt.Popup,
@@ -27,10 +36,12 @@ const useAddmaker = ({ setDragedLngLat, position, element, map }: markerProp): f
       .setPopup(popup)
       .addTo(map);
   };
-    destinationMarker = addmarker(map!,  new tt.Popup({ offset: 35 }).setHTML(
-      "Click anywhere on the map to change passenger location."
-    ), position!)
-  function drawPassengerMarkerOnMap(geoResponse: any, map: tt.Map) {
+
+  function drawPassengerMarkerOnMap(
+    geoResponse: any,
+    map: tt.Map,
+    destinationMarker: tt.Marker
+  ) {
     if (
       geoResponse &&
       geoResponse.addresses &&
@@ -51,6 +62,7 @@ const useAddmaker = ({ setDragedLngLat, position, element, map }: markerProp): f
     event: tt.MapMouseEvent<"click">,
     apiKey: string,
     map: tt.Map,
+    destinationMarker: tt.Marker
   ) => {
     const position = event.lngLat;
     setDragedLngLat(position);
@@ -60,11 +72,11 @@ const useAddmaker = ({ setDragedLngLat, position, element, map }: markerProp): f
         position: position,
       })
       .then(function (results: any) {
-        drawPassengerMarkerOnMap(results, map);
+        drawPassengerMarkerOnMap(results, map, destinationMarker);
       });
   };
 
-  return { mapClick };
+  return { addmarker, mapClick };
 };
 
 export default useAddmaker;
