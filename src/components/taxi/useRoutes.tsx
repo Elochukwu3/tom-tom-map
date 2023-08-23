@@ -19,7 +19,6 @@ const useRoutes = () => {
       map.removeSource(child[0]);
       map.removeSource(child[1]);
     });
-    console.log(routes)
     routes = [];
     passengerMarker.togglePopup();
   }
@@ -143,10 +142,6 @@ const useRoutes = () => {
     };
   }
 
-  
-    useEffect(() => {
-      console.log("Updated taxiPassengerBatchCoordinates:", taxiPassengerBatchCoordinates);
-    }, [taxiPassengerBatchCoordinates])
   return { submitButtonHandler };
 };
 
@@ -155,8 +150,13 @@ function calculateBestRouteIndex(batchItems: any[]): number {
     let shortestDuration = Number.MAX_VALUE;
     let bestIndex = -1;
   
+    console.log(batchItems);
     batchItems.forEach((singleRoute, index) => {
-      const routeDuration = singleRoute.summary.travelTimeInSeconds;
+        
+      let routeDuration = singleRoute.toGeoJson();
+      console.log(routeDuration);
+      console.log(routeDuration.type);
+    //   routeDuration = singleRoute.features[0].properties.summary.travelTimeInSeconds;
       if (routeDuration < shortestDuration) {
         shortestDuration = routeDuration;
         bestIndex = index;
