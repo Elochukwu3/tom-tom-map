@@ -4,7 +4,6 @@ import * as ttServices from "@tomtom-international/web-sdk-services";
 type markerProp = {
   setDragedLngLat: React.Dispatch<React.SetStateAction<object>>;
   position?: [number, number] | undefined;
-  element: HTMLElement | null;
   map?: tt.Map | undefined | null;
 };
 
@@ -22,7 +21,7 @@ type func = {
   ) => tt.Marker;
 };
 
-const useAddmaker = ({ setDragedLngLat, element }: markerProp): func => {
+const useAddmaker = ({ setDragedLngLat}: markerProp): func => {
   const addmarker = (
     map: tt.Map,
     popup: tt.Popup,

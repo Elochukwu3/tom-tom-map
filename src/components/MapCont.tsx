@@ -22,7 +22,6 @@ const MapCont = () => {
   const divRef = useRef<HTMLDivElement | null>(null!);
   const { addmarker, mapClick } = useAddmaker({
     setDragedLngLat,
-    element: divRef?.current,
   });
 
   useEffect(() => {
@@ -49,7 +48,7 @@ const MapCont = () => {
         .setLngLat([location.long, location.lat])
         .addTo(map);
       staticIndicator.getElement().className = "marker";
-      //   console.log(myMap, dragedLngLat);
+        console.log(dragedLngLat);
       handleTaxi(map);
       const newDestinationMarker = addmarker(
         map,
