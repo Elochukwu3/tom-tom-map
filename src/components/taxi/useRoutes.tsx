@@ -1,12 +1,15 @@
 import * as tt from "@tomtom-international/web-sdk-maps";
 import * as ttServices from "@tomtom-international/web-sdk-services";
 import useTaxiCreatore from "./useTaxiCreatore";
+import { useState, useEffect } from "react";
 
 const useRoutes = () => {
-  const { handleTaxi, setDefaultTaxiConfig, taxiArray } = useTaxiCreatore();
+  const { taxiArray } = useTaxiCreatore();
+  const [taxiPassengerBatchCoordinates, setTaxiPassengerBatchCoordinates] =
+    useState<string[]>([]);
   let routes: any[] = [];
-  const routeWeight = "9";
-  const routeBackgroundWeight = "12";
+  const routeWeight = 9;
+  const routeBackgroundWeight = 12;
 
   function clear(map: tt.Map, passengerMarker: tt.Marker) {
     routes.forEach(function (child) {
@@ -15,8 +18,8 @@ const useRoutes = () => {
       map.removeSource(child[0]);
       map.removeSource(child[1]);
     });
+    console.log(routes)
     routes = [];
-    setDefaultTaxiConfig();
     passengerMarker.togglePopup();
   }
   function submitButtonHandler(
@@ -26,33 +29,38 @@ const useRoutes = () => {
     apiKey: string
   ) {
     clear(map, passengerMarker);
-    let taxiPassengerBatchCoordinates: string[] = [];
 
-    function updateTaxiBatchLocations(passengerCoordinates: any) {
-      taxiPassengerBatchCoordinates = [];
+    function updateTaxiBatchLocations(passengerCoordinates:[number, number]) {
+      console.log(taxiArray);
+      
+      const updatedCoordinates: string[] = [];
       taxiArray.forEach((taxi) => {
-        taxiPassengerBatchCoordinates.push(
-          taxi.coordinates + ":" + passengerCoordinates
-        );
+        updatedCoordinates.push(taxi.coordinates.join(",") + ":" + passengerCoordinates.join(","));
       });
+      setTaxiPassengerBatchCoordinates(updatedCoordinates);
+      console.log(updatedCoordinates, taxiPassengerBatchCoordinates);
+      
     }
-    setDefaultTaxiConfig();
-    updateTaxiBatchLocations(location);
+
     let bestRouteIndex: number;
-    const drawAllRoute = async () => {
+    updateTaxiBatchLocations(location);
+    const drawAllRoute = () => {
+        console.log(taxiPassengerBatchCoordinates);
+        
       const calRoute = ttServices.services.calculateRoute({
         batchMode: "sync",
         key: apiKey,
-        batchItems: [
-          { locations: taxiPassengerBatchCoordinates[0] },
-          { locations: taxiPassengerBatchCoordinates[1] },
-          { locations: taxiPassengerBatchCoordinates[2] },
-          { locations: taxiPassengerBatchCoordinates[3] },
-        ],
+        batchItems:[
+        { locations: taxiPassengerBatchCoordinates[0] },
+        { locations: taxiPassengerBatchCoordinates[1] },
+        { locations: taxiPassengerBatchCoordinates[2] },
+        { locations: taxiPassengerBatchCoordinates[3] },
+        ]
+//        batchItems: taxiPassengerBatchCoordinates.map((coords) => ({
+//         locations: [coords], 
+//   })),
       });
-      try {
-        const result = await calRoute;
-        console.log(result);
+      calRoute.then((result) => {
         result.batchItems.forEach(function (singleRoute: any, index) {
           const routeGeoJson = singleRoute.toGeoJson();
           const route: string[] = [];
@@ -90,23 +98,22 @@ const useRoutes = () => {
             map.fitBounds(bounds, { padding: 150 });
           }
           map.on("mouseenter", route_layer_id, function () {
-            map.moveLayer(route_background_layer_id)
-            map.moveLayer(route_layer_id)
-          })
-  
+            map.moveLayer(route_background_layer_id);
+            map.moveLayer(route_layer_id);
+          });
+
           map.on("mouseleave", route_layer_id, function () {
-            bringBestRouteToFront()
-          })
+            bringBestRouteToFront();
+          });
         });
-      } catch (error) {
-        console.log(error);
-      }
-      bringBestRouteToFront()
+        bringBestRouteToFront();
+      });
+
     };
     function bringBestRouteToFront() {
-        map.moveLayer(routes[bestRouteIndex][0])
-        map.moveLayer(routes[bestRouteIndex][1])
-      }
+      map.moveLayer(routes[bestRouteIndex][0]);
+      map.moveLayer(routes[bestRouteIndex][1]);
+    }
     drawAllRoute();
   }
 
@@ -133,6 +140,11 @@ const useRoutes = () => {
       },
     };
   }
+
+  
+    useEffect(() => {
+      console.log("Updated taxiPassengerBatchCoordinates:", taxiPassengerBatchCoordinates);
+    }, [taxiPassengerBatchCoordinates])
   return { submitButtonHandler };
 };
 

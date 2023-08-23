@@ -11,6 +11,9 @@ const apiKey = import.meta.env.VITE_API_MAP_KEY;
 
 const MapCont = () => {
   const location: locationObject = useLocation();
+  const [destinationMarker, setDestinationMarker] = useState<tt.Marker | null>(
+    null
+  );
   const { handleTaxi } = useTaxiCreatore();
   const { submitButtonHandler } = useRoutes();
   const [myMap, setMyMap] = useState<tt.Map | null>(null);
@@ -21,7 +24,6 @@ const MapCont = () => {
     setDragedLngLat,
     element: divRef?.current,
   });
-  let destinationMarker: tt.Marker;
 
   useEffect(() => {
     if (location) {
@@ -49,23 +51,25 @@ const MapCont = () => {
       staticIndicator.getElement().className = "marker";
       //   console.log(myMap, dragedLngLat);
       handleTaxi(map);
-      destinationMarker = addmarker(
+      const newDestinationMarker = addmarker(
         map,
         new tt.Popup({ offset: [0, -30] }).setHTML(
           "click on any part of the map"
         ),
         [location.long, location.lat]
       );
+      setDestinationMarker(newDestinationMarker);
 
       map.on("click", (event) => {
-        mapClick(event, apiKey, map, destinationMarker);
+        destinationMarker && mapClick(event, apiKey, map, destinationMarker);
       });
     }
   }, [location]);
   const handler = () => {
-    console.log(destinationMarker, "route=func");
-    
-   ( myMap && destinationMarker) &&
+    console.log([location.long, location.lat], "route=func");
+
+    myMap &&
+      destinationMarker &&
       submitButtonHandler(
         myMap,
         [location.long, location.lat],

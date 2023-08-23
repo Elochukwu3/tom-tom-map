@@ -1,13 +1,14 @@
 import { taxiProp } from "./type";
 import useCreateTaxi from "./useCreateTaxi";
 import * as tt from "@tomtom-international/web-sdk-maps";
-
+import { useState, useEffect } from "react";
 const useTaxiCreatore = () => {
-  let taxiArray: taxiProp[] = [];
+  const [taxiArray, setTaxiArray] = useState<taxiProp[]>([]);
+
   const createTaxi = useCreateTaxi();
 
   function setDefaultTaxiConfig() {
-    taxiArray = [
+    return [
       createTaxi("CAR #1", "#006967", [4.9041, 52.3676], "/image/cab-1.jpeg"),
       createTaxi(
         "CAR #2",
@@ -29,8 +30,11 @@ const useTaxiCreatore = () => {
       ),
     ];
   }
+  useEffect(() => {
+    const newData = setDefaultTaxiConfig()
+    setTaxiArray(newData);
+  }, []);
   const handleTaxi = (map: tt.Map): void => {
-    setDefaultTaxiConfig();
     taxiArray.forEach(function (taxi) {
       const carMarkerElement = document.createElement("div");
       carMarkerElement.innerHTML = taxi.icon;
@@ -44,7 +48,7 @@ const useTaxiCreatore = () => {
     });
   };
 
-  return { handleTaxi, setDefaultTaxiConfig, taxiArray };
+  return { handleTaxi, taxiArray };
 };
 
 export default useTaxiCreatore;
