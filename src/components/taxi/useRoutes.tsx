@@ -7,6 +7,7 @@ const useRoutes = () => {
   const { taxiArray } = useTaxiCreatore();
   const [taxiPassengerBatchCoordinates, setTaxiPassengerBatchCoordinates] =
     useState<string[]>([]);
+    const [bestRouteIndex, setBestRouteIndex] = useState<number>(0)
   let routes: any[] = [];
   const routeWeight = 9;
   const routeBackgroundWeight = 12;
@@ -40,10 +41,9 @@ const useRoutes = () => {
       setTaxiPassengerBatchCoordinates(updatedCoordinates);      
     }
 
-    let bestRouteIndex: number;
+    // let bestRouteIndex: number;
     updateTaxiBatchLocations(location);
     const drawAllRoute = () => {
-        console.log(taxiPassengerBatchCoordinates);
         
       const calRoute = ttServices.services.calculateRoute({
         batchMode: "sync",
@@ -56,6 +56,8 @@ const useRoutes = () => {
         ]
       });
       calRoute.then((result) => {
+        const newBestRouteIndex = calculateBestRouteIndex(result.batchItems)
+        setBestRouteIndex(newBestRouteIndex)
         result.batchItems.forEach(function (singleRoute: any, index) {
           const routeGeoJson = singleRoute.toGeoJson();
           const route: string[] = [];
@@ -88,6 +90,7 @@ const useRoutes = () => {
           routes[index] = route;
 
           if (index === bestRouteIndex) {
+            console.log("1===best");
             const bounds = new tt.LngLatBounds();
             routeGeoJson.features[0].geometry.coordinates.forEach(function (
               point: any
@@ -148,3 +151,18 @@ const useRoutes = () => {
 };
 
 export default useRoutes;
+function calculateBestRouteIndex(batchItems: any[]): number {
+    let shortestDuration = Number.MAX_VALUE;
+    let bestIndex = -1;
+  
+    batchItems.forEach((singleRoute, index) => {
+      const routeDuration = singleRoute.summary.travelTimeInSeconds;
+      if (routeDuration < shortestDuration) {
+        shortestDuration = routeDuration;
+        bestIndex = index;
+      }
+    });
+  
+    return bestIndex;
+  }
+  
