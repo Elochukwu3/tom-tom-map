@@ -5,10 +5,9 @@ export type locationObject = Record<locator, number>;
 
 const useLocation = (): locationObject => {
   const [location, setLocation] = useState<locationObject>({
-    lat: 6.5244,
-    long: 3.3792,
+    lat: 52.3676,
+    long: 4.9041,
   });
-  const [isAccess, setIsAcess] = useState(Boolean)
 
   useEffect(() => {
     const navigatorFunc = (): void => {
@@ -17,26 +16,18 @@ const useLocation = (): locationObject => {
           (position) => {
             const { latitude, longitude } = position.coords;
             setLocation({ lat: latitude, long: longitude });
-            console.log(position.coords);
+            // console.log(position.coords);
           },
           (error) => {
-            console.log(error);
-            setIsAcess(true)
+            // console.log(error);
           }
         );
       } else {
-            setIsAcess(true)
-        // setLocation({ lat: 6.5244, long: 3.3792 });
+        setLocation({ lat: 52.3676, long: 4.9041});
       }
     };
     navigatorFunc();
-
-
   }, []);
-
-  const giveLocationAccess = ():void=>{
-
-  }
 
   return location;
 };

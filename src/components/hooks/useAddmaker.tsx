@@ -1,35 +1,82 @@
 import * as tt from "@tomtom-international/web-sdk-maps";
+import * as ttServices from "@tomtom-international/web-sdk-services";
 
 type markerProp = {
   setDragedLngLat: React.Dispatch<React.SetStateAction<object>>;
-  longitude: number;
-  latitude: number;
-  element: HTMLElement | null;
+  position?: [number, number] | undefined;
+  map?: tt.Map | undefined | null;
 };
 
+type func = {
+  mapClick: (
+    event: tt.MapMouseEvent<"click">,
+    apiKey: string,
+    map: tt.Map,
+    destinationMarke: tt.Marker
+  ) => void;
+  addmarker: (
+    map: tt.Map,
+    popup: tt.Popup,
+    position: [number, number]
+  ) => tt.Marker;
+};
 
-const useAddmaker = ({
-  setDragedLngLat,
-  longitude,
-  latitude,
-  element,
-}: markerProp) => {
-  const addmarker = (map: tt.Map): void => {
-    const popupFunc = new tt.Popup({offset:[0, -25]}).setHTML("This is you")
-    const marker = new tt.Marker({
-      draggable: true,
-      element: element!,
+const useAddmaker = ({ setDragedLngLat}: markerProp): func => {
+  const addmarker = (
+    map: tt.Map,
+    popup: tt.Popup,
+    position: [number, number]
+  ): tt.Marker => {
+    return new tt.Marker({
+      draggable: false,
+     element: document.createElement("div"),
     })
-      .setLngLat([longitude, latitude])
-      .addTo(map);
-    marker.on("dragend", (): void => {
-      const LngLat: tt.LngLat = marker.getLngLat();
-      setDragedLngLat(LngLat);
-    });
-    marker.setPopup(popupFunc).togglePopup()
+      .setLngLat(position)
+      .setPopup(popup)
+      .addTo(map)
   };
 
-  return { addmarker };
+  function drawPassengerMarkerOnMap(
+    geoResponse: any,
+    map: tt.Map,
+    destinationMarker: tt.Marker
+  ) {
+    if (
+      geoResponse &&
+      geoResponse.addresses &&
+      geoResponse.addresses[0].address.freeformAddress
+    ) {
+      destinationMarker.remove();
+      destinationMarker = addmarker(
+        map,
+        new tt.Popup({ offset: [0, -30]}).setHTML(
+          geoResponse.addresses[0].address.freeformAddress
+        ),
+        geoResponse.addresses[0].position
+      );
+      destinationMarker.getElement().className = "marker";
+      destinationMarker.togglePopup();
+    }
+  }
+  const mapClick = (
+    event: tt.MapMouseEvent<"click">,
+    apiKey: string,
+    map: tt.Map,
+    destinationMarker: tt.Marker
+  ) => {
+    const position = event.lngLat;
+    setDragedLngLat(position);
+    ttServices.services
+      .reverseGeocode({
+        key: apiKey,
+        position: position,
+      })
+      .then(function (results: any) {
+        drawPassengerMarkerOnMap(results, map, destinationMarker);
+      });
+  };
+
+  return { addmarker, mapClick };
 };
 
 export default useAddmaker;

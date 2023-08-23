@@ -3,28 +3,30 @@ import * as tt from "@tomtom-international/web-sdk-maps";
 import "@tomtom-international/web-sdk-maps/dist/maps.css";
 import { TMapContent } from "./type";
 import useAddmaker from "./hooks/useAddmaker";
-import useLocation, {locationObject} from "./hooks/useLocation";
+import useLocation, { locationObject } from "./hooks/useLocation";
+import useTaxiCreatore from "./taxi/useTaxiCreatore";
+import useRoutes from "./taxi/useRoutes";
 
 const apiKey = import.meta.env.VITE_API_MAP_KEY;
 
 const MapCont = () => {
-    const location:locationObject = useLocation()
+  const location: locationObject = useLocation();
+  const [destinationMarker, setDestinationMarker] = useState<tt.Marker | null>(
+    null
+  );
+  const { handleTaxi } = useTaxiCreatore();
+  const { submitButtonHandler } = useRoutes();
   const [myMap, setMyMap] = useState<tt.Map | null>(null);
   const [dragedLngLat, setDragedLngLat] = useState<object>({});
-  const [loader, setLoader] = useState<Boolean>(true);
 
   const divRef = useRef<HTMLDivElement | null>(null!);
-  const { addmarker } = useAddmaker({
+  const { addmarker, mapClick } = useAddmaker({
     setDragedLngLat,
-    longitude:location.long,
-    latitude: location.lat,
-    element: divRef?.current,
   });
 
   useEffect(() => {
-    
-   if(location){    
-    const mapOptions: TMapContent = {
+    if (location) {
+      const mapOptions: TMapContent = {
         key: apiKey,
         container: "map",
         zoom: 14,
@@ -34,28 +36,54 @@ const MapCont = () => {
           trafficFlow: true,
         },
       };
-      setLoader(false);
       const map = tt.map(mapOptions);
-      addmarker(map);
       setMyMap(map);
-  
+
       map.addControl(new tt.FullscreenControl());
       map.addControl(new tt.NavigationControl());
-  
-      const staticIndicator = new tt.Marker({
-          element: document.createElement("div"),
-        }).setLngLat( [location.long, location.lat])
-        .addTo(map)
-        staticIndicator.getElement().className = "marker"
-   }
-   
-  }, [ location]);
 
+      const staticIndicator = new tt.Marker({
+        element: document.createElement("div"),
+      })
+        .setLngLat([location.long, location.lat])
+        .addTo(map);
+      staticIndicator.getElement().className = "marker";
+        console.log(dragedLngLat);
+      handleTaxi(map);
+      const newDestinationMarker = addmarker(
+        map,
+        new tt.Popup({ offset: [0, -30] }).setHTML(
+          "click on any part of the map"
+        ),
+        [location.long, location.lat]
+      );
+      setDestinationMarker(newDestinationMarker);
+
+      map.on("click", (event) => {
+        destinationMarker && mapClick(event, apiKey, map, destinationMarker);
+      });
+    }
+  }, [location]);
+  const handler = () => {
+    console.log([location.long, location.lat], "route=func");
+
+    myMap &&
+      destinationMarker &&
+      submitButtonHandler(
+        myMap,
+        [location.long, location.lat],
+        destinationMarker,
+        apiKey
+      );
+  };
 
   return (
     <div className="w-full h-full" id="map">
-            <div className="marker" ref={divRef}></div>
-          </div>
+      <div className="marker " ref={divRef}></div>
+      <button className="bg-red-700 p-3 w-1/4 absolute z-50" onClick={handler}>
+        submit
+      </button>
+    </div>
   );
 };
 
