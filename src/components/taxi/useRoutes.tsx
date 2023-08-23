@@ -37,9 +37,7 @@ const useRoutes = () => {
       taxiArray.forEach((taxi) => {
         updatedCoordinates.push(taxi.coordinates.join(",") + ":" + passengerCoordinates.join(","));
       });
-      setTaxiPassengerBatchCoordinates(updatedCoordinates);
-      console.log(updatedCoordinates, taxiPassengerBatchCoordinates);
-      
+      setTaxiPassengerBatchCoordinates(updatedCoordinates);      
     }
 
     let bestRouteIndex: number;
@@ -56,9 +54,6 @@ const useRoutes = () => {
         { locations: taxiPassengerBatchCoordinates[2] },
         { locations: taxiPassengerBatchCoordinates[3] },
         ]
-//        batchItems: taxiPassengerBatchCoordinates.map((coords) => ({
-//         locations: [coords], 
-//   })),
       });
       calRoute.then((result) => {
         result.batchItems.forEach(function (singleRoute: any, index) {
