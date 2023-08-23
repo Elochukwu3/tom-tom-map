@@ -66,23 +66,27 @@ const useRoutes = () => {
           const route: string[] = [];
           const route_background_layer_id = "route_background_" + index;
           const route_layer_id = "route_" + index;
-          map
-            .addLayer(
-              buildStyle(
-                route_background_layer_id,
-                routeGeoJson,
-                "black",
-                routeBackgroundWeight
-              )
+          const existing_route_background_layer_id = map.getLayer(route_background_layer_id )
+          const existing_routeLayer = map.getLayer(route_layer_id)
+         
+          !existing_route_background_layer_id && 
+           map
+          .addLayer(
+            buildStyle(
+              route_background_layer_id,
+              routeGeoJson,
+              "black",
+              routeBackgroundWeight
             )
-            .addLayer(
-              buildStyle(
-                route_layer_id,
-                routeGeoJson,
-                taxiArray[index].color,
-                routeWeight
-              )
-            );
+          )
+            !existing_routeLayer && map.addLayer(
+                buildStyle(
+                  route_layer_id,
+                  routeGeoJson,
+                  taxiArray[index].color,
+                  routeWeight
+                )
+              );
 
           route[0] = route_background_layer_id;
           route[1] = route_layer_id;
