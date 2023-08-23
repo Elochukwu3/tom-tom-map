@@ -121,7 +121,7 @@ const useRoutes = () => {
     id: string,
     data: string,
     color: string,
-    width: string
+    width: number
   ): tt.Layer {
     return {
       id: id,
