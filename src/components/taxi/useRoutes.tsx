@@ -78,7 +78,9 @@ const useRoutes = () => {
           route[0] = route_background_layer_id
           route[1] = route_layer_id
         //   routes[index] = route
-      } catch (error) {
+      } 
+    }
+      catch (error) {
         console.log(error)
       }
     };
@@ -103,7 +105,6 @@ const useRoutes = () => {
       },
     }
   }
-    }
   return { submitButtonHandler };
 };
 
