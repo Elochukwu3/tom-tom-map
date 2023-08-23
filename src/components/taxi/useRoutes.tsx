@@ -124,7 +124,7 @@ const useRoutes = () => {
     data: string,
     color: string,
     width: number
-  ): tt.Layer {
+  ): tt.AnyLayer {
     return {
       id: id,
       type: "line",
