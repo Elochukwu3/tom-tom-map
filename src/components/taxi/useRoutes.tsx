@@ -4,9 +4,9 @@ import useTaxiCreatore from "./useTaxiCreatore";
 
 const useRoutes = () => {
   const { handleTaxi, setDefaultTaxiConfig, taxiArray } = useTaxiCreatore();
-  let routes: [] = [];
-  const routeWeight = '9';
-  const routeBackgroundWeight = '12';
+  let routes: any[] = [];
+  const routeWeight = "9";
+  const routeBackgroundWeight = "12";
 
   function clear(map: tt.Map, passengerMarker: tt.Marker) {
     routes.forEach(function (child) {
@@ -22,10 +22,11 @@ const useRoutes = () => {
   function submitButtonHandler(
     map: tt.Map,
     location: [number, number],
-    passengerMarker: tt.Marker
+    passengerMarker: tt.Marker,
+    apiKey: string
   ) {
     clear(map, passengerMarker);
-    let taxiPassengerBatchCoordinates: any = [];
+    let taxiPassengerBatchCoordinates: string[] = [];
 
     function updateTaxiBatchLocations(passengerCoordinates: any) {
       taxiPassengerBatchCoordinates = [];
@@ -37,11 +38,11 @@ const useRoutes = () => {
     }
     setDefaultTaxiConfig();
     updateTaxiBatchLocations(location);
-    let bestRoute: any;
+    let bestRouteIndex: number;
     const drawAllRoute = async () => {
       const calRoute = ttServices.services.calculateRoute({
         batchMode: "sync",
-        key: "",
+        key: apiKey,
         batchItems: [
           { locations: taxiPassengerBatchCoordinates[0] },
           { locations: taxiPassengerBatchCoordinates[1] },
@@ -52,14 +53,14 @@ const useRoutes = () => {
       try {
         const result = await calRoute;
         console.log(result);
-        result.batchItems.forEach(function (singleRoute:any, index) {
-            const routeGeoJson = singleRoute.toGeoJson()
-            const route:string[] = []
-            const route_background_layer_id = "route_background_" + index
-            const route_layer_id = "route_" + index
-            map
+        result.batchItems.forEach(function (singleRoute: any, index) {
+          const routeGeoJson = singleRoute.toGeoJson();
+          const route: string[] = [];
+          const route_background_layer_id = "route_background_" + index;
+          const route_layer_id = "route_" + index;
+          map
             .addLayer(
-          buildStyle(
+              buildStyle(
                 route_background_layer_id,
                 routeGeoJson,
                 "black",
@@ -73,21 +74,48 @@ const useRoutes = () => {
                 taxiArray[index].color,
                 routeWeight
               )
-            )
+            );
+
+          route[0] = route_background_layer_id;
+          route[1] = route_layer_id;
+          routes[index] = route;
+
+          if (index === bestRouteIndex) {
+            const bounds = new tt.LngLatBounds();
+            routeGeoJson.features[0].geometry.coordinates.forEach(function (
+              point: any
+            ) {
+              bounds.extend(tt.LngLat.convert(point));
+            });
+            map.fitBounds(bounds, { padding: 150 });
+          }
+          map.on("mouseenter", route_layer_id, function () {
+            map.moveLayer(route_background_layer_id)
+            map.moveLayer(route_layer_id)
+          })
   
-          route[0] = route_background_layer_id
-          route[1] = route_layer_id
-        //   routes[index] = route
-      } 
-    }
-      catch (error) {
-        console.log(error)
+          map.on("mouseleave", route_layer_id, function () {
+            bringBestRouteToFront()
+          })
+        });
+      } catch (error) {
+        console.log(error);
       }
+      bringBestRouteToFront()
     };
-    drawAllRoute()
+    function bringBestRouteToFront() {
+        map.moveLayer(routes[bestRouteIndex][0])
+        map.moveLayer(routes[bestRouteIndex][1])
+      }
+    drawAllRoute();
   }
 
-  function buildStyle(id:string, data:string, color:string, width:string):tt.Layer {
+  function buildStyle(
+    id: string,
+    data: string,
+    color: string,
+    width: string
+  ): tt.Layer {
     return {
       id: id,
       type: "line",
@@ -103,7 +131,7 @@ const useRoutes = () => {
         "line-cap": "round",
         "line-join": "round",
       },
-    }
+    };
   }
   return { submitButtonHandler };
 };

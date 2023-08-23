@@ -69,7 +69,8 @@ const MapCont = () => {
       submitButtonHandler(
         myMap,
         [location.long, location.lat],
-        destinationMarker
+        destinationMarker,
+        apiKey
       );
   };
 
