@@ -30,11 +30,11 @@ const useAddmaker = ({ setDragedLngLat, element }: markerProp): func => {
   ): tt.Marker => {
     return new tt.Marker({
       draggable: false,
-      element: element!,
+     element: document.createElement("div"),
     })
       .setLngLat(position)
       .setPopup(popup)
-      .addTo(map);
+      .addTo(map)
   };
 
   function drawPassengerMarkerOnMap(
@@ -50,11 +50,12 @@ const useAddmaker = ({ setDragedLngLat, element }: markerProp): func => {
       destinationMarker.remove();
       destinationMarker = addmarker(
         map,
-        new tt.Popup({ offset: 35 }).setHTML(
+        new tt.Popup({ offset: [0, -30]}).setHTML(
           geoResponse.addresses[0].address.freeformAddress
         ),
         geoResponse.addresses[0].position
       );
+      destinationMarker.getElement().className = "marker";
       destinationMarker.togglePopup();
     }
   }

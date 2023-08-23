@@ -16,10 +16,10 @@ const useLocation = (): locationObject => {
           (position) => {
             const { latitude, longitude } = position.coords;
             setLocation({ lat: latitude, long: longitude });
-            console.log(position.coords);
+            // console.log(position.coords);
           },
           (error) => {
-            console.log(error);
+            // console.log(error);
           }
         );
       } else {

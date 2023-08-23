@@ -5,12 +5,14 @@ import { TMapContent } from "./type";
 import useAddmaker from "./hooks/useAddmaker";
 import useLocation, { locationObject } from "./hooks/useLocation";
 import useTaxiCreatore from "./taxi/useTaxiCreatore";
+import useRoutes from "./taxi/useRoutes";
 
 const apiKey = import.meta.env.VITE_API_MAP_KEY;
 
 const MapCont = () => {
   const location: locationObject = useLocation();
   const { handleTaxi } = useTaxiCreatore();
+  const { submitButtonHandler } = useRoutes();
   const [myMap, setMyMap] = useState<tt.Map | null>(null);
   const [dragedLngLat, setDragedLngLat] = useState<object>({});
 
@@ -45,22 +47,36 @@ const MapCont = () => {
         .setLngLat([location.long, location.lat])
         .addTo(map);
       staticIndicator.getElement().className = "marker";
-      console.log(myMap, dragedLngLat);
+      //   console.log(myMap, dragedLngLat);
       handleTaxi(map);
-
- destinationMarker = addmarker(map,  new tt.Popup({ offset: 35 }).setHTML(
-    "click on any part of the map"
-  ),[location.long, location.lat]);
+      destinationMarker = addmarker(
+        map,
+        new tt.Popup({ offset: [0, -30] }).setHTML(
+          "click on any part of the map"
+        ),
+        [location.long, location.lat]
+      );
 
       map.on("click", (event) => {
-        mapClick(event, apiKey, map,  destinationMarker);
+        mapClick(event, apiKey, map, destinationMarker);
       });
     }
   }, [location]);
+  const handle = () => {
+    myMap &&
+      submitButtonHandler(
+        myMap,
+        [location.long, location.lat],
+        destinationMarker
+      );
+  };
 
   return (
     <div className="w-full h-full" id="map">
       <div className="marker " ref={divRef}></div>
+      <button className="bg-red-700 p-3 w-1/4 absolute z-50" onClick={handler}>
+        submit
+      </button>
     </div>
   );
 };

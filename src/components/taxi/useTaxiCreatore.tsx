@@ -44,7 +44,7 @@ const useTaxiCreatore = () => {
     });
   };
 
-  return { handleTaxi, setDefaultTaxiConfig };
+  return { handleTaxi, setDefaultTaxiConfig, taxiArray };
 };
 
 export default useTaxiCreatore;
