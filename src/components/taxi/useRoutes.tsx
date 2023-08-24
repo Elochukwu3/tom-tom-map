@@ -92,7 +92,6 @@ const useRoutes = () => {
           routes[index] = route;
 
           if (index === bestRouteIndex) {
-            console.log("1===best");
             const bounds = new tt.LngLatBounds();
             routeGeoJson.features[0].geometry.coordinates.forEach(function (
               point: any
@@ -154,8 +153,6 @@ function calculateBestRouteIndex(batchItems: any[]): number {
 
   batchItems.forEach((singleRoute, index) => {
     let routeDuration = singleRoute.toGeoJson();
-    //   console.log(routeDuration);
-      console.log(routeDuration.features[0].properties.summary.travelTimeInSeconds);
     routeDuration =
       routeDuration.features[0].properties.summary.travelTimeInSeconds;
     if (routeDuration < shortestDuration) {
