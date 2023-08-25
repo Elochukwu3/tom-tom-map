@@ -20,13 +20,15 @@ function processMatrixResponse(
   });
   modifyFastestRouteColor(travelTimeInSecondsArray, taxiArray, bestRouteIndex);
   drawAllRoute();
+  console.log(bestRouteIndex);
+  
 }
 function modifyFastestRouteColor(
   travelTimeInSecondsArray: [],
   taxiArray: taxiProp[],
   bestRouteIndex: number
 ) {
-  const fastestRouteColor = "";
+  const fastestRouteColor = "#65A7A9";
   const sortedTab = travelTimeInSecondsArray.slice();
   sortedTab.sort(function (a, b) {
     return a - b;

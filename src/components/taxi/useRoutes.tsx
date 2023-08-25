@@ -2,6 +2,8 @@ import * as tt from "@tomtom-international/web-sdk-maps";
 import * as ttServices from "@tomtom-international/web-sdk-services";
 import useTaxiCreatore from "./useTaxiCreatore";
 import { useState, useEffect } from "react";
+import { buildStyle } from "./buildStyleFormat";
+import { calculateBestRouteIndex } from "./calBestRoute";
 
 const useRoutes = () => {
   const { taxiArray } = useTaxiCreatore();
@@ -118,53 +120,10 @@ const useRoutes = () => {
     drawAllRoute();
   }
 
-  function buildStyle(
-    id: string,
-    data: string,
-    color: string,
-    width: number
-  ): tt.AnyLayer {
-    return {
-      id: id,
-      type: "line",
-      source: {
-        type: "geojson",
-        data: data,
-      },
-      paint: {
-        "line-color": color,
-        "line-width": width,
-      },
-      layout: {
-        "line-cap": "round",
-        "line-join": "round",
-      },
-    };
-  }
-
   return { submitButtonHandler };
 };
 
 export default useRoutes;
-function calculateBestRouteIndex(batchItems: any[]): number {
-  let shortestDuration = Number.MAX_VALUE;
-  let bestIndex = -1;
-
-  batchItems.forEach((singleRoute, index) => {
-    let routeDuration = singleRoute.toGeoJson();
-    routeDuration =
-      routeDuration.features[0].properties.summary.travelTimeInSeconds;
-      console.log(routeDuration);
-      
-    if (routeDuration < shortestDuration) {
-      shortestDuration = routeDuration;
-      bestIndex = index;
-    }
-  });
-
-  return bestIndex;
-}
-
 
   
 
