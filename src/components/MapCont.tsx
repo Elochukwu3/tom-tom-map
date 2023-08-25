@@ -65,8 +65,6 @@ const MapCont = () => {
     }
   }, [location]);
   const handler = () => {
-    console.log([location.long, location.lat], "route=func");
-
     myMap &&
       destinationMarker &&
       submitButtonHandler(

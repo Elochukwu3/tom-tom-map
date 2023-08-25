@@ -31,7 +31,6 @@ const useRoutes = () => {
     clear(map, passengerMarker);
 
     function updateTaxiBatchLocations(passengerCoordinates: [number, number]) {
-      console.log(taxiArray);
 
       const updatedCoordinates: string[] = [];
       taxiArray.forEach((taxi) => {
@@ -56,6 +55,7 @@ const useRoutes = () => {
         ],
       });
       calRoute.then((result) => {
+        
         const newBestRouteIndex = calculateBestRouteIndex(result.batchItems);
         setBestRouteIndex(newBestRouteIndex);
         result.batchItems.forEach(function (singleRoute: any, index) {
@@ -155,6 +155,8 @@ function calculateBestRouteIndex(batchItems: any[]): number {
     let routeDuration = singleRoute.toGeoJson();
     routeDuration =
       routeDuration.features[0].properties.summary.travelTimeInSeconds;
+      console.log(routeDuration);
+      
     if (routeDuration < shortestDuration) {
       shortestDuration = routeDuration;
       bestIndex = index;
