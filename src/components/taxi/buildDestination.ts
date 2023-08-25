@@ -1,10 +1,4 @@
-//   function buildDestinationsParameter() {
-//     return [
-//       convertToPoint(
-//         passengerMarker.getLngLat().lat,
-//         passengerMarker.getLngLat().lng
-//       ),
-//     ]
+
 
 import convertPoint from "./convertPoint"
 

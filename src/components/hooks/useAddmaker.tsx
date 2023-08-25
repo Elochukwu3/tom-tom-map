@@ -1,25 +1,8 @@
 import * as tt from "@tomtom-international/web-sdk-maps";
 import * as ttServices from "@tomtom-international/web-sdk-services";
+import { markerProp, func } from "./type";
 
-type markerProp = {
-  setDragedLngLat: React.Dispatch<React.SetStateAction<object>>;
-  position?: [number, number] | undefined;
-  map?: tt.Map | undefined | null;
-};
 
-type func = {
-  mapClick: (
-    event: tt.MapMouseEvent<"click">,
-    apiKey: string,
-    map: tt.Map,
-    destinationMarke: tt.Marker
-  ) => void;
-  addmarker: (
-    map: tt.Map,
-    popup: tt.Popup,
-    position: [number, number]
-  ) => tt.Marker;
-};
 
 const useAddmaker = ({ setDragedLngLat}: markerProp): func => {
   const addmarker = (
