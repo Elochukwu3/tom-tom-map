@@ -1,8 +1,6 @@
-
-
 import convertPoint from "./convertPoint"
 
-const buildDestinationsParameter = (passengerMarker: any)=>{
+export const buildDestinationsParameter = (passengerMarker: any)=>{
     return [
         convertPoint(
             passengerMarker.getLngLat().lat,
