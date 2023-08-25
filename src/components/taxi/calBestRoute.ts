@@ -6,7 +6,6 @@ export function calculateBestRouteIndex(batchItems: any[]): number {
       let routeDuration = singleRoute.toGeoJson();
       routeDuration =
         routeDuration.features[0].properties.summary.travelTimeInSeconds;
-        console.log(routeDuration, "from calculateBestRoute");
         
       if (routeDuration < shortestDuration) {
         shortestDuration = routeDuration;

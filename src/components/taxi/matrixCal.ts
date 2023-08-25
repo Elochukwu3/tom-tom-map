@@ -1,40 +1,39 @@
 import { taxiProp } from "./type";
 
 function processMatrixResponse(
-  result: any,
+  result: any[],
   drawAllRoute: VoidFunction,
   taxiArray: taxiProp[],
   bestRouteIndex: number
 ) {
+  console.log(result);
+
   const travelTimeInSecondsArray: any = [];
   const lengthInMetersArray = [];
   const trafficDelayInSecondsArray = [];
-  result.matrix.forEach(function (child: any) {
-    travelTimeInSecondsArray.push(
-      child[0].response.routeSummary.travelTimeInSeconds
-    );
-    lengthInMetersArray.push(child[0].response.routeSummary.lengthInMeters);
-    trafficDelayInSecondsArray.push(
-      child[0].routeSummary.response.trafficDelayInSeconds
-    );
+  result.forEach(function (child: any) {
+    console.log(child.routeSummary.travelTimeInSeconds);
+
+    travelTimeInSecondsArray.push(child.routeSummary.travelTimeInSeconds);
+    lengthInMetersArray.push(child.routeSummary.lengthInMeters);
+    trafficDelayInSecondsArray.push(child.routeSummary.trafficDelayInSeconds);
   });
   modifyFastestRouteColor(travelTimeInSecondsArray, taxiArray, bestRouteIndex);
   drawAllRoute();
-  console.log(bestRouteIndex);
-  
 }
 function modifyFastestRouteColor(
   travelTimeInSecondsArray: [],
   taxiArray: taxiProp[],
   bestRouteIndex: number
 ) {
-  const fastestRouteColor = "#65A7A9";
+  const fastestRouteColor = "#800080";
   const sortedTab = travelTimeInSecondsArray.slice();
   sortedTab.sort(function (a, b) {
     return a - b;
   });
   bestRouteIndex = travelTimeInSecondsArray.indexOf(sortedTab[0]);
   taxiArray[bestRouteIndex].color = fastestRouteColor;
+  console.log(taxiArray[bestRouteIndex], "time to take",sortedTab[0]);
 }
 
-export default processMatrixResponse
+export default processMatrixResponse;

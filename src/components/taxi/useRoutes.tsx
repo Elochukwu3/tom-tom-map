@@ -1,9 +1,10 @@
 import * as tt from "@tomtom-international/web-sdk-maps";
 import * as ttServices from "@tomtom-international/web-sdk-services";
 import useTaxiCreatore from "./useTaxiCreatore";
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import { buildStyle } from "./buildStyleFormat";
 import { calculateBestRouteIndex } from "./calBestRoute";
+import { callMatrix } from "./callMatrix";
 
 const useRoutes = () => {
   const { taxiArray } = useTaxiCreatore();
@@ -118,6 +119,7 @@ const useRoutes = () => {
       map.moveLayer(routes[bestRouteIndex][1]);
     }
     drawAllRoute();
+    callMatrix(apiKey, taxiArray,destinationMarker, drawAllRoute, bestRouteIndex)
   }
 
   return { submitButtonHandler };

@@ -19,8 +19,8 @@ export async function callMatrix(
     buildDestinationsParameter(passengerMarker);
 
   const requestData = {
-    "origins": origins,
-    "destinations": destinations
+    origins: origins,
+    destinations: destinations,
   };
   const postData = {
     method: "POST",
@@ -32,15 +32,19 @@ export async function callMatrix(
   if (apiKey) {
     const API_URL = `https://api.tomtom.com/routing/matrix/2?key=${apiKey}`;
     try {
-      const response = await fetch(API_URL, postData);
+      const response:Response = await fetch(API_URL, postData);
       if (!response.ok) throw new Error("Network response was not ok");
-     const result = response.json()
-     console.log(response);
-     
       
+      const result = await response.json();
+      result &&
+        processMatrixResponse(
+          result.data,
+          drawAllRoute,
+          taxiArray,
+          bestRouteIndex
+        );
     } catch (error) {
-        console.log(error);
-        
+      console.log(error);
     }
   }
 }
