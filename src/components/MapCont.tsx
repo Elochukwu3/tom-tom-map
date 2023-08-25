@@ -76,7 +76,7 @@ const MapCont = () => {
   };
 
   return (
-    <div className="w-full h-full" id="map">
+    <div className="w-full h-screen z-30" id="map">
       <div className="marker " ref={divRef}></div>
       <button className="bg-red-700 p-3 w-1/4 absolute z-50" onClick={handler}>
         submit
