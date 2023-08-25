@@ -12,7 +12,7 @@ const useRoutes = () => {
   const routeWeight = 9;
   const routeBackgroundWeight = 12;
 
-  function clear(map: tt.Map, passengerMarker: tt.Marker) {
+  function clear(map: tt.Map, destinationMarker: tt.Marker) {
     routes.forEach(function (child) {
       map.removeLayer(child[0]);
       map.removeLayer(child[1]);
@@ -20,15 +20,15 @@ const useRoutes = () => {
       map.removeSource(child[1]);
     });
     routes = [];
-    passengerMarker.togglePopup();
+    destinationMarker.togglePopup();
   }
   function submitButtonHandler(
     map: tt.Map,
     location: [number, number],
-    passengerMarker: tt.Marker,
+    destinationMarker: tt.Marker,
     apiKey: string
   ) {
-    clear(map, passengerMarker);
+    clear(map, destinationMarker);
 
     function updateTaxiBatchLocations(passengerCoordinates: [number, number]) {
 
@@ -41,7 +41,6 @@ const useRoutes = () => {
       setTaxiPassengerBatchCoordinates(updatedCoordinates);
     }
 
-    // let bestRouteIndex: number;
     updateTaxiBatchLocations(location);
     const drawAllRoute = () => {
       const calRoute = ttServices.services.calculateRoute({
@@ -166,19 +165,6 @@ function calculateBestRouteIndex(batchItems: any[]): number {
   return bestIndex;
 }
 
-//     // drawAllRoutes()
 
   
 
-//   function callMatrix() {
-//     const origins = buildOriginsParameter()
-//     const destinations = buildDestinationsParameter()
-//     tt.services
-//       .matrixRouting({
-//         key: apiKey,
-//         origins: origins,
-//         destinations: destinations,
-//         traffic: true,
-//       })
-//       .then(processMatrixResponse)
-//   }
