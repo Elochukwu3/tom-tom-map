@@ -6,13 +6,13 @@ function processMatrixResponse(
   taxiArray: taxiProp[],
   bestRouteIndex: number
 ) {
-  console.log(result);
+  // console.log(result);
 
   const travelTimeInSecondsArray: any = [];
   const lengthInMetersArray = [];
   const trafficDelayInSecondsArray = [];
   result.forEach(function (child: any) {
-    console.log(child.routeSummary.travelTimeInSeconds);
+    // console.log(child.routeSummary.travelTimeInSeconds);
 
     travelTimeInSecondsArray.push(child.routeSummary.travelTimeInSeconds);
     lengthInMetersArray.push(child.routeSummary.lengthInMeters);
@@ -33,7 +33,7 @@ function modifyFastestRouteColor(
   });
   bestRouteIndex = travelTimeInSecondsArray.indexOf(sortedTab[0]);
   taxiArray[bestRouteIndex].color = fastestRouteColor;
-  console.log(taxiArray[bestRouteIndex], "time to take",sortedTab[0]);
+  // console.log(taxiArray[bestRouteIndex], "time to take",sortedTab[0]);
 }
 
 export default processMatrixResponse;
