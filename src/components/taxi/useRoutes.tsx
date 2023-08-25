@@ -167,13 +167,7 @@ function calculateBestRouteIndex(batchItems: any[]): number {
 }
 
 //     // drawAllRoutes()
-//   function buildOriginsParameter() {
-//     const origins = []
-//     taxiConfig.forEach(function (taxi) {
-//       origins.push(convertToPoint(taxi.coordinates[1], taxi.coordinates[0]))
-//     })
-//     return origins
-//   }
+
   
 
 //   function callMatrix() {
