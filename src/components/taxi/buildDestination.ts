@@ -1,4 +1,4 @@
-import convertPoint from "./convertPoint"
+import convertPoint from "./convertPoint";
 
 export const buildDestinationsParameter = (passengerMarker: any)=>{
     return [
