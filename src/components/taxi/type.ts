@@ -1,7 +1,14 @@
 type taxiProp = {
-    name: string;
-    color: string;
-    coordinates: [number, number];
-    icon: string;
+  name: string;
+  color: string;
+  coordinates: [number, number];
+  icon: string;
+};
+
+type pointType = {
+  point: {
+    latitude: number;
+    longitude: number;
   };
-  export type {taxiProp}
+};
+export type { taxiProp, pointType };

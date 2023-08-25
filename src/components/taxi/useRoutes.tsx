@@ -165,29 +165,8 @@ function calculateBestRouteIndex(batchItems: any[]): number {
 
   return bestIndex;
 }
-// function processMatrixResponse(result:any[]) {
-//     const travelTimeInSecondsArray = []
-//     const lengthInMetersArray = []
-//     const trafficDelayInSecondsArray = []
-//     result.matrix.forEach(function (child) {
-//       travelTimeInSecondsArray.push(
-//         child[0].response.routeSummary.travelTimeInSeconds
-//       )
-//       lengthInMetersArray.push(child[0].response.routeSummary.lengthInMeters)
-//       trafficDelayInSecondsArray.push(
-//         child[0].routeSummary.response.trafficDelayInSeconds
-//       )
-//     })
+
 //     // drawAllRoutes()
-//   }function convertToPoint(lat, long) {
-//     return {
-//       point: {
-//         latitude: lat,
-//         longitude: long,
-//       },
-//     }
-//   }
-  
 //   function buildOriginsParameter() {
 //     const origins = []
 //     taxiConfig.forEach(function (taxi) {
@@ -196,14 +175,7 @@ function calculateBestRouteIndex(batchItems: any[]): number {
 //     return origins
 //   }
   
-//   function buildDestinationsParameter() {
-//     return [
-//       convertToPoint(
-//         passengerMarker.getLngLat().lat,
-//         passengerMarker.getLngLat().lng
-//       ),
-//     ]
-//   }
+
 //   function callMatrix() {
 //     const origins = buildOriginsParameter()
 //     const destinations = buildDestinationsParameter()
