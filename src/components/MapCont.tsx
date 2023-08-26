@@ -48,7 +48,7 @@ const MapCont = () => {
         .setLngLat([location.long, location.lat])
         .addTo(map);
       staticIndicator.getElement().className = "marker";
-        console.log(dragedLngLat);
+      console.log(dragedLngLat);
       handleTaxi(map);
       const newDestinationMarker = addmarker(
         map,
@@ -58,13 +58,26 @@ const MapCont = () => {
         [location.long, location.lat]
       );
       setDestinationMarker(newDestinationMarker);
-
-      map.on("click", (event) => {
-        destinationMarker && mapClick(event, apiKey, map, destinationMarker);
-      });
     }
   }, [location]);
+useEffect(() => {
+ 
+  const mapOnclick = () => {
+    myMap &&
+      myMap.on("click", (event) => {
+        destinationMarker && mapClick(event, apiKey, myMap, destinationMarker, setDestinationMarker);
+      });
+  };
+  mapOnclick()
+  return () => {
+    mapOnclick()
+  }
+}, [destinationMarker?.getLngLat()])
+
+  
   const handler = () => {
+    console.log(myMap, destinationMarker);
+
     myMap &&
       destinationMarker &&
       submitButtonHandler(

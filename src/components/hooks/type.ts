@@ -10,7 +10,8 @@ type func = {
       event: tt.MapMouseEvent<"click">,
       apiKey: string,
       map: tt.Map,
-      destinationMarke: tt.Marker
+      destinationMarker: tt.Marker,
+      setDestinationMarker:React.Dispatch<React.SetStateAction<tt.Marker | null>>
     ) => void;
     addmarker: (
       map: tt.Map,
