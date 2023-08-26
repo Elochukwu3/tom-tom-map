@@ -48,7 +48,7 @@ const MapCont = () => {
         .setLngLat([location.long, location.lat])
         .addTo(map);
       staticIndicator.getElement().className = "marker";
-        console.log(dragedLngLat);
+      console.log(dragedLngLat);
       handleTaxi(map);
       const newDestinationMarker = addmarker(
         map,
@@ -58,14 +58,25 @@ const MapCont = () => {
         [location.long, location.lat]
       );
       setDestinationMarker(newDestinationMarker);
-
-      map.on("click", (event) => {
-        destinationMarker && mapClick(event, apiKey, map, destinationMarker);
-      });
     }
   }, [location]);
+useEffect(() => {
+ 
+  const mapOnclick = () => {
+    myMap &&
+      myMap.on("click", (event) => {
+        destinationMarker && mapClick(event, apiKey, destinationMarker, setDestinationMarker);
+      });
+  };
+  mapOnclick()
+  return () => {
+    mapOnclick()
+  }
+}, [destinationMarker?.getLngLat()])
+
+  
   const handler = () => {
-    console.log([location.long, location.lat], "route=func");
+    console.log(myMap, destinationMarker);
 
     myMap &&
       destinationMarker &&
@@ -78,7 +89,7 @@ const MapCont = () => {
   };
 
   return (
-    <div className="w-full h-full" id="map">
+    <div className="w-full h-screen z-30" id="map">
       <div className="marker " ref={divRef}></div>
       <button className="bg-red-700 p-3 w-1/4 absolute z-50" onClick={handler}>
         submit

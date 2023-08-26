@@ -9,7 +9,7 @@ const useTaxiCreatore = () => {
 
   function setDefaultTaxiConfig() {
     return [
-      createTaxi("CAR #1", "#006967", [4.9041, 52.3676], "/image/cab-1.jpeg"),
+      createTaxi("CAR #1", "#006967", [4.902642, 52.373627], "/image/cab-1.jpeg"),
       createTaxi(
         "CAR #2",
         "#EC619F",

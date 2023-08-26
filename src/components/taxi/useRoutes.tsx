@@ -1,7 +1,10 @@
 import * as tt from "@tomtom-international/web-sdk-maps";
 import * as ttServices from "@tomtom-international/web-sdk-services";
 import useTaxiCreatore from "./useTaxiCreatore";
-import { useState, useEffect } from "react";
+import { useState} from "react";
+import { buildStyle } from "./buildStyleFormat";
+import { calculateBestRouteIndex } from "./calBestRoute";
+import { callMatrix } from "./callMatrix";
 
 const useRoutes = () => {
   const { taxiArray } = useTaxiCreatore();
@@ -12,7 +15,7 @@ const useRoutes = () => {
   const routeWeight = 9;
   const routeBackgroundWeight = 12;
 
-  function clear(map: tt.Map, passengerMarker: tt.Marker) {
+  function clear(map: tt.Map, destinationMarker: tt.Marker) {
     routes.forEach(function (child) {
       map.removeLayer(child[0]);
       map.removeLayer(child[1]);
@@ -20,18 +23,17 @@ const useRoutes = () => {
       map.removeSource(child[1]);
     });
     routes = [];
-    passengerMarker.togglePopup();
+    destinationMarker.togglePopup();
   }
   function submitButtonHandler(
     map: tt.Map,
     location: [number, number],
-    passengerMarker: tt.Marker,
+    destinationMarker: tt.Marker,
     apiKey: string
   ) {
-    clear(map, passengerMarker);
+    clear(map, destinationMarker);
 
     function updateTaxiBatchLocations(passengerCoordinates: [number, number]) {
-      console.log(taxiArray);
 
       const updatedCoordinates: string[] = [];
       taxiArray.forEach((taxi) => {
@@ -42,7 +44,6 @@ const useRoutes = () => {
       setTaxiPassengerBatchCoordinates(updatedCoordinates);
     }
 
-    // let bestRouteIndex: number;
     updateTaxiBatchLocations(location);
     const drawAllRoute = () => {
       const calRoute = ttServices.services.calculateRoute({
@@ -56,6 +57,7 @@ const useRoutes = () => {
         ],
       });
       calRoute.then((result) => {
+        
         const newBestRouteIndex = calculateBestRouteIndex(result.batchItems);
         setBestRouteIndex(newBestRouteIndex);
         result.batchItems.forEach(function (singleRoute: any, index) {
@@ -117,100 +119,13 @@ const useRoutes = () => {
       map.moveLayer(routes[bestRouteIndex][1]);
     }
     drawAllRoute();
-  }
-
-  function buildStyle(
-    id: string,
-    data: string,
-    color: string,
-    width: number
-  ): tt.AnyLayer {
-    return {
-      id: id,
-      type: "line",
-      source: {
-        type: "geojson",
-        data: data,
-      },
-      paint: {
-        "line-color": color,
-        "line-width": width,
-      },
-      layout: {
-        "line-cap": "round",
-        "line-join": "round",
-      },
-    };
+    callMatrix(apiKey, taxiArray,destinationMarker, drawAllRoute, bestRouteIndex)
   }
 
   return { submitButtonHandler };
 };
 
 export default useRoutes;
-function calculateBestRouteIndex(batchItems: any[]): number {
-  let shortestDuration = Number.MAX_VALUE;
-  let bestIndex = -1;
 
-  batchItems.forEach((singleRoute, index) => {
-    let routeDuration = singleRoute.toGeoJson();
-    routeDuration =
-      routeDuration.features[0].properties.summary.travelTimeInSeconds;
-    if (routeDuration < shortestDuration) {
-      shortestDuration = routeDuration;
-      bestIndex = index;
-    }
-  });
+  
 
-  return bestIndex;
-}
-// function processMatrixResponse(result:any[]) {
-//     const travelTimeInSecondsArray = []
-//     const lengthInMetersArray = []
-//     const trafficDelayInSecondsArray = []
-//     result.matrix.forEach(function (child) {
-//       travelTimeInSecondsArray.push(
-//         child[0].response.routeSummary.travelTimeInSeconds
-//       )
-//       lengthInMetersArray.push(child[0].response.routeSummary.lengthInMeters)
-//       trafficDelayInSecondsArray.push(
-//         child[0].routeSummary.response.trafficDelayInSeconds
-//       )
-//     })
-//     // drawAllRoutes()
-//   }function convertToPoint(lat, long) {
-//     return {
-//       point: {
-//         latitude: lat,
-//         longitude: long,
-//       },
-//     }
-//   }
-  
-//   function buildOriginsParameter() {
-//     const origins = []
-//     taxiConfig.forEach(function (taxi) {
-//       origins.push(convertToPoint(taxi.coordinates[1], taxi.coordinates[0]))
-//     })
-//     return origins
-//   }
-  
-//   function buildDestinationsParameter() {
-//     return [
-//       convertToPoint(
-//         passengerMarker.getLngLat().lat,
-//         passengerMarker.getLngLat().lng
-//       ),
-//     ]
-//   }
-//   function callMatrix() {
-//     const origins = buildOriginsParameter()
-//     const destinations = buildDestinationsParameter()
-//     tt.services
-//       .matrixRouting({
-//         key: apiKey,
-//         origins: origins,
-//         destinations: destinations,
-//         traffic: true,
-//       })
-//       .then(processMatrixResponse)
-//   }

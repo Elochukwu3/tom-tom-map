@@ -3,9 +3,9 @@
 @tailwind utilities;
 
 .marker{
-    background-image: url("../public/image/marker.png");
-    width: 40px;
-    height: 40px;
+    background-image: url("../image/marker.png");
+    width: 35px;
+    height: 35px;
     object-fit: cover;
     background-repeat: no-repeat;
     background-size: cover;

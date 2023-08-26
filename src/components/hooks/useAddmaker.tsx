@@ -1,27 +1,8 @@
 import * as tt from "@tomtom-international/web-sdk-maps";
 import * as ttServices from "@tomtom-international/web-sdk-services";
+import { markerProp, func } from "./type";
 
-type markerProp = {
-  setDragedLngLat: React.Dispatch<React.SetStateAction<object>>;
-  position?: [number, number] | undefined;
-  map?: tt.Map | undefined | null;
-};
-
-type func = {
-  mapClick: (
-    event: tt.MapMouseEvent<"click">,
-    apiKey: string,
-    map: tt.Map,
-    destinationMarke: tt.Marker
-  ) => void;
-  addmarker: (
-    map: tt.Map,
-    popup: tt.Popup,
-    position: [number, number]
-  ) => tt.Marker;
-};
-
-const useAddmaker = ({ setDragedLngLat}: markerProp): func => {
+const useAddmaker = ({ setDragedLngLat }: markerProp): func => {
   const addmarker = (
     map: tt.Map,
     popup: tt.Popup,
@@ -29,40 +10,44 @@ const useAddmaker = ({ setDragedLngLat}: markerProp): func => {
   ): tt.Marker => {
     return new tt.Marker({
       draggable: false,
-     element: document.createElement("div"),
+      element: document.createElement("div"),
     })
       .setLngLat(position)
       .setPopup(popup)
-      .addTo(map)
+      .addTo(map);
   };
 
   function drawPassengerMarkerOnMap(
     geoResponse: any,
-    map: tt.Map,
-    destinationMarker: tt.Marker
+    destinationMarker: tt.Marker,
+    setDestinationMarker: React.Dispatch<React.SetStateAction<tt.Marker | null>>
   ) {
+
     if (
       geoResponse &&
       geoResponse.addresses &&
       geoResponse.addresses[0].address.freeformAddress
     ) {
-      destinationMarker.remove();
-      destinationMarker = addmarker(
-        map,
-        new tt.Popup({ offset: [0, -30]}).setHTML(
-          geoResponse.addresses[0].address.freeformAddress
-        ),
-        geoResponse.addresses[0].position
-      );
-      destinationMarker.getElement().className = "marker";
-      destinationMarker.togglePopup();
+    destinationMarker.setLngLat(geoResponse.addresses[0].position);
+    destinationMarker.setPopup(
+      new tt.Popup({ offset: [0, -20] }).setHTML(
+        geoResponse.addresses[0].address.freeformAddress
+      )
+    );
+    
+
+    destinationMarker.getElement().className = "marker";
+    destinationMarker.togglePopup();
+
+    setDestinationMarker(destinationMarker);
     }
   }
+  
   const mapClick = (
     event: tt.MapMouseEvent<"click">,
     apiKey: string,
-    map: tt.Map,
-    destinationMarker: tt.Marker
+    destinationMarker: tt.Marker,
+    setDestinationMarker: React.Dispatch<React.SetStateAction<tt.Marker | null>>
   ) => {
     const position = event.lngLat;
     setDragedLngLat(position);
@@ -72,7 +57,11 @@ const useAddmaker = ({ setDragedLngLat}: markerProp): func => {
         position: position,
       })
       .then(function (results: any) {
-        drawPassengerMarkerOnMap(results, map, destinationMarker);
+        drawPassengerMarkerOnMap(
+          results,
+          destinationMarker,
+          setDestinationMarker
+        );
       });
   };
 
