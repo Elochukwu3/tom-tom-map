@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-.marker{
+.marker{  
     background-image: url("../image/marker.png");
     width: 35px;
     height: 35px;
