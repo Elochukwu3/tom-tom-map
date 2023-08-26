@@ -7,7 +7,7 @@ const useRoutes = () => {
   const { taxiArray } = useTaxiCreatore();
   const [taxiPassengerBatchCoordinates, setTaxiPassengerBatchCoordinates] =
     useState<string[]>([]);
-    const [bestRouteIndex, setBestRouteIndex] = useState<number>(0)
+  const [bestRouteIndex, setBestRouteIndex] = useState<number>(0);
   let routes: any[] = [];
   const routeWeight = 9;
   const routeBackgroundWeight = 12;
@@ -19,7 +19,6 @@ const useRoutes = () => {
       map.removeSource(child[0]);
       map.removeSource(child[1]);
     });
-    console.log(routes)
     routes = [];
     passengerMarker.togglePopup();
   }
@@ -31,66 +30,68 @@ const useRoutes = () => {
   ) {
     clear(map, passengerMarker);
 
-    function updateTaxiBatchLocations(passengerCoordinates:[number, number]) {
+    function updateTaxiBatchLocations(passengerCoordinates: [number, number]) {
       console.log(taxiArray);
-      
+
       const updatedCoordinates: string[] = [];
       taxiArray.forEach((taxi) => {
-        updatedCoordinates.push(taxi.coordinates.join(",") + ":" + passengerCoordinates.join(","));
+        updatedCoordinates.push(
+          taxi.coordinates.join(",") + ":" + passengerCoordinates.join(",")
+        );
       });
-      setTaxiPassengerBatchCoordinates(updatedCoordinates);      
+      setTaxiPassengerBatchCoordinates(updatedCoordinates);
     }
 
     // let bestRouteIndex: number;
     updateTaxiBatchLocations(location);
     const drawAllRoute = () => {
-        
       const calRoute = ttServices.services.calculateRoute({
         batchMode: "sync",
         key: apiKey,
-        batchItems:[
-        { locations: taxiPassengerBatchCoordinates[0] },
-        { locations: taxiPassengerBatchCoordinates[1] },
-        { locations: taxiPassengerBatchCoordinates[2] },
-        { locations: taxiPassengerBatchCoordinates[3] },
-        ]
+        batchItems: [
+          { locations: taxiPassengerBatchCoordinates[0] },
+          { locations: taxiPassengerBatchCoordinates[1] },
+          { locations: taxiPassengerBatchCoordinates[2] },
+          { locations: taxiPassengerBatchCoordinates[3] },
+        ],
       });
       calRoute.then((result) => {
-        const newBestRouteIndex = calculateBestRouteIndex(result.batchItems)
-        setBestRouteIndex(newBestRouteIndex)
+        const newBestRouteIndex = calculateBestRouteIndex(result.batchItems);
+        setBestRouteIndex(newBestRouteIndex);
         result.batchItems.forEach(function (singleRoute: any, index) {
           const routeGeoJson = singleRoute.toGeoJson();
           const route: string[] = [];
           const route_background_layer_id = "route_background_" + index;
           const route_layer_id = "route_" + index;
-          const existing_route_background_layer_id = map.getLayer(route_background_layer_id )
-          const existing_routeLayer = map.getLayer(route_layer_id)
-         
-          !existing_route_background_layer_id && 
-           map
-          .addLayer(
-            buildStyle(
-              route_background_layer_id,
-              routeGeoJson,
-              "black",
-              routeBackgroundWeight
-            )
-          )
-            !existing_routeLayer && map.addLayer(
-                buildStyle(
-                  route_layer_id,
-                  routeGeoJson,
-                  taxiArray[index].color,
-                  routeWeight
-                )
-              );
+          const existing_route_background_layer_id = map.getLayer(
+            route_background_layer_id
+          );
+          const existing_routeLayer = map.getLayer(route_layer_id);
+
+          !existing_route_background_layer_id &&
+            map.addLayer(
+              buildStyle(
+                route_background_layer_id,
+                routeGeoJson,
+                "black",
+                routeBackgroundWeight
+              )
+            );
+          !existing_routeLayer &&
+            map.addLayer(
+              buildStyle(
+                route_layer_id,
+                routeGeoJson,
+                taxiArray[index].color,
+                routeWeight
+              )
+            );
 
           route[0] = route_background_layer_id;
           route[1] = route_layer_id;
           routes[index] = route;
 
           if (index === bestRouteIndex) {
-            console.log("1===best");
             const bounds = new tt.LngLatBounds();
             routeGeoJson.features[0].geometry.coordinates.forEach(function (
               point: any
@@ -110,7 +111,6 @@ const useRoutes = () => {
         });
         bringBestRouteToFront();
       });
-
     };
     function bringBestRouteToFront() {
       map.moveLayer(routes[bestRouteIndex][0]);
@@ -143,26 +143,74 @@ const useRoutes = () => {
     };
   }
 
-  
-    useEffect(() => {
-      console.log("Updated taxiPassengerBatchCoordinates:", taxiPassengerBatchCoordinates);
-    }, [taxiPassengerBatchCoordinates])
   return { submitButtonHandler };
 };
 
 export default useRoutes;
 function calculateBestRouteIndex(batchItems: any[]): number {
-    let shortestDuration = Number.MAX_VALUE;
-    let bestIndex = -1;
+  let shortestDuration = Number.MAX_VALUE;
+  let bestIndex = -1;
+
+  batchItems.forEach((singleRoute, index) => {
+    let routeDuration = singleRoute.toGeoJson();
+    routeDuration =
+      routeDuration.features[0].properties.summary.travelTimeInSeconds;
+    if (routeDuration < shortestDuration) {
+      shortestDuration = routeDuration;
+      bestIndex = index;
+    }
+  });
+
+  return bestIndex;
+}
+// function processMatrixResponse(result:any[]) {
+//     const travelTimeInSecondsArray = []
+//     const lengthInMetersArray = []
+//     const trafficDelayInSecondsArray = []
+//     result.matrix.forEach(function (child) {
+//       travelTimeInSecondsArray.push(
+//         child[0].response.routeSummary.travelTimeInSeconds
+//       )
+//       lengthInMetersArray.push(child[0].response.routeSummary.lengthInMeters)
+//       trafficDelayInSecondsArray.push(
+//         child[0].routeSummary.response.trafficDelayInSeconds
+//       )
+//     })
+//     // drawAllRoutes()
+//   }function convertToPoint(lat, long) {
+//     return {
+//       point: {
+//         latitude: lat,
+//         longitude: long,
+//       },
+//     }
+//   }
   
-    batchItems.forEach((singleRoute, index) => {
-      const routeDuration = singleRoute.summary.travelTimeInSeconds;
-      if (routeDuration < shortestDuration) {
-        shortestDuration = routeDuration;
-        bestIndex = index;
-      }
-    });
+//   function buildOriginsParameter() {
+//     const origins = []
+//     taxiConfig.forEach(function (taxi) {
+//       origins.push(convertToPoint(taxi.coordinates[1], taxi.coordinates[0]))
+//     })
+//     return origins
+//   }
   
-    return bestIndex;
-  }
-  
+//   function buildDestinationsParameter() {
+//     return [
+//       convertToPoint(
+//         passengerMarker.getLngLat().lat,
+//         passengerMarker.getLngLat().lng
+//       ),
+//     ]
+//   }
+//   function callMatrix() {
+//     const origins = buildOriginsParameter()
+//     const destinations = buildDestinationsParameter()
+//     tt.services
+//       .matrixRouting({
+//         key: apiKey,
+//         origins: origins,
+//         destinations: destinations,
+//         traffic: true,
+//       })
+//       .then(processMatrixResponse)
+//   }
