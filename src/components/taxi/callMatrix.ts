@@ -1,6 +1,5 @@
 import { buildDestinationsParameter } from "./buildDestination";
 import { buildOriginsParameter } from "./buildOriginParams";
-import * as ttService from "@tomtom-international/web-sdk-services";
 import { taxiProp } from "./type";
 import processMatrixResponse from "./matrixCal";
 
