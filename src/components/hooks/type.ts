@@ -9,7 +9,6 @@ type func = {
     mapClick: (
       event: tt.MapMouseEvent<"click">,
       apiKey: string,
-      map: tt.Map,
       destinationMarker: tt.Marker,
       setDestinationMarker:React.Dispatch<React.SetStateAction<tt.Marker | null>>
     ) => void;

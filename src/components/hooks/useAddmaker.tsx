@@ -7,9 +7,7 @@ const useAddmaker = ({ setDragedLngLat }: markerProp): func => {
     map: tt.Map,
     popup: tt.Popup,
     position: [number, number]
-    // destinationMarker: tt.Marker
   ): tt.Marker => {
-    // if(!destinationMarker){
     return new tt.Marker({
       draggable: false,
       element: document.createElement("div"),
@@ -17,7 +15,6 @@ const useAddmaker = ({ setDragedLngLat }: markerProp): func => {
       .setLngLat(position)
       .setPopup(popup)
       .addTo(map);
-    // }
   };
 
   function drawPassengerMarkerOnMap(
@@ -45,6 +42,7 @@ const useAddmaker = ({ setDragedLngLat }: markerProp): func => {
     setDestinationMarker(destinationMarker);
     }
   }
+  
   const mapClick = (
     event: tt.MapMouseEvent<"click">,
     apiKey: string,
