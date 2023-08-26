@@ -49,7 +49,7 @@ const useAddmaker = ({ setDragedLngLat }: markerProp): func => {
        // Update the marker's position and popup content
     destinationMarker.setLngLat(geoResponse.addresses[0].position);
     destinationMarker.setPopup(
-      new tt.Popup({ offset: [0, -30] }).setHTML(
+      new tt.Popup({ offset: [0, -20] }).setHTML(
         geoResponse.addresses[0].address.freeformAddress
       )
     );
