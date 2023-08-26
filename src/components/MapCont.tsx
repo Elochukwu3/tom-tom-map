@@ -65,7 +65,7 @@ useEffect(() => {
   const mapOnclick = () => {
     myMap &&
       myMap.on("click", (event) => {
-        destinationMarker && mapClick(event, apiKey, myMap, destinationMarker, setDestinationMarker);
+        destinationMarker && mapClick(event, apiKey, destinationMarker, setDestinationMarker);
       });
   };
   mapOnclick()
