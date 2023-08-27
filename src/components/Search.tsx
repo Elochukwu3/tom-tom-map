@@ -1,7 +1,13 @@
+import {useState} from "react";
 
 const Search = () => {
+ const [input, setInput]= useState('')
   return (
-    <div>Search</div>
+    <div>Search
+      <form>
+        <input value={""} na/>
+      </form>
+    </div>
   )
 }
 
