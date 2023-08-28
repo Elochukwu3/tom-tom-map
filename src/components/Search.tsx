@@ -5,10 +5,15 @@ const Search = () => {
   const onchange = (e:any) => {
     setInput(e.target.value);
   };
+  const onSubmit = (e: FormEventHandler<HTMLFormElement>)=>{
+    e.preventDefault()
+    https://api.tomtom.com/search/2/search/${changedSearchText}.json?
+    
+  }
   return (
     <div>
       Search
-      <form>
+      <form className="flex w-full overflow-hidden" onSubmit={onSubmit}>
         <input
           onChange={onchange}
           value={input}
@@ -18,6 +23,7 @@ const Search = () => {
           autoFocus={true}
           autoComplete=""
         />
+        <button type="submit">Q</button>
       </form>
     </div>
   );
