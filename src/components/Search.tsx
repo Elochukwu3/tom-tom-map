@@ -1,4 +1,5 @@
 import { useState, FormEvent } from "react";
+const apiKey = import.meta.env.VITE_API_MAP_KEY
 
 const Search = () => {
   const [input, setInput] = useState("");
@@ -11,8 +12,10 @@ const Search = () => {
   const onSubmit = async(e: FormEvent<HTMLFormElement>)=> {
     e.preventDefault()
     if(input && input.length > 4){
-      const response = await fetch(`https://api.tomtom.com/search/2/search/${input}.json?key={Your_API_Key}&language=en-US`)
-      console.log(response);
+      const response = await fetch(`https://api.tomtom.com/search/2/search/${input}.json?key=${apiKey}&language=en-US`)
+      const result = await response.json()
+      console.log(result);
+      
       
     }
   }
