@@ -1,12 +1,21 @@
 import { useState, FormEvent } from "react";
+import useDebounce from "./hooks/useDbounce";
 const TOM_TOM_API_KEY = import.meta.env.VITE_API_MAP_KEY;
 const API_URL = `https://api.tomtom.com/search/2/autocomplete/pizza.json?key=${TOM_TOM_API_KEY}&language=en-US`;
 
 const Search = () => {
   const [input, setInput] = useState("");
+  const [err, setErr] = useState<string | null>(null);
+  const debouncevalue = useDebounce(input);
+
   const onchange = (e: any) => {
     setInput(e.target.value);
-    // console.log(input);
+    if(debouncevalue.length > 3){
+      console.log(debouncevalue                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        );
+      
+    }else{
+      setErr("Add content")
+    }
   };
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -40,6 +49,7 @@ const Search = () => {
           autoFocus={true}
           autoComplete=""
           className="py-2 w-full outline-none text-xl"
+          placeholder="Search for places......"
         />
       </form>
       <div className="h-96 w-full  bg-white border-t-2 border-zinc-700 "></div>
