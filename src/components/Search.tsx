@@ -2,17 +2,35 @@ import { useState, FormEvent } from "react";
 import useDebounce from "./hooks/useDbounce";
 const TOM_TOM_API_KEY = import.meta.env.VITE_API_MAP_KEY;
 const API_URL = `https://api.tomtom.com/search/2/autocomplete/pizza.json?key=${TOM_TOM_API_KEY}&language=en-US`;
-
+import * as searchtt from "@tomtom-international/web-sdk-plugin-searchbox"
 const Search = () => {
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState("");		 
   const [err, setErr] = useState<string | null>(null);
   const debouncevalue = useDebounce(input);
 
-  const onchange = (e: any) => {
+const searchOptions = new searchtt.SearchBox({
+  key:"jjddh",
+  language: 'en-US',
+  minNumberOfCharacters: 2,
+
+})
+
+
+  const onchange = async(e: any) => {
     setInput(e.target.value);
     if(debouncevalue.length > 3){
-      console.log(debouncevalue                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        );
+      console.log(debouncevalue);
       
+      const response = await fetch(API_URL)
+      const data = await response.json()
+      console.log(data);
+      
+    try{
+
+    }
+    catch(error){
+
+    }      
     }else{
       setErr("Add content")
     }
