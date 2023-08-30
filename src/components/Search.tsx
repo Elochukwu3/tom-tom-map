@@ -1,4 +1,5 @@
-import { useState, FormEvent } from "react";
+const apiKey = import.meta.env.VITE_API_MAP_KEY;
+import { useState, FormEvent, useEffect, useRef } from "react";
 import useDebounce from "./hooks/useDbounce";
 const TOM_TOM_API_KEY = import.meta.env.VITE_API_MAP_KEY;
 const API_URL = `https://api.tomtom.com/search/2/autocomplete/pizza.json?key=${TOM_TOM_API_KEY}&language=en-US`;
@@ -8,8 +9,7 @@ const Search = () => {
   const [input, setInput] = useState("");
   const [err, setErr] = useState<string | null>(null);
   const debouncevalue = useDebounce(input);
-
-  const apiKey = import.meta.env.VITE_API_MAP_KEY;
+  const inputRef = useRef(null)
 
   const options = {
     idleTimePress: 100,
@@ -25,7 +25,19 @@ const Search = () => {
     noResultsMessage: "No results found.",
   };
 
-  const ttSearchBox = new SearchBox(services, options);
+  useEffect(()=>{
+    const ttSearchBox = new SearchBox(services, options);
+    const searchBoxElement = ttSearchBox.getSearchBoxHTML();
+    if(inputRef.current && searchBoxElement){
+      inputRef.current.innerHtml ='';
+      inputRef.current.appendChild(searchBoxElement)
+    }
+    
+
+    return()=>{
+      ttSearchBox.onRemove()
+    }
+  }, [options])
 
   const onchange = async (e: any) => {
     setInput(e.target.value);
@@ -62,8 +74,7 @@ const Search = () => {
   return (
     <div className="rounded-md bg-zinc-800 z-50 md:w-1/2 w-9/12 flex justify-center flex-col items-center fixed right-0 bottom-0">
       {/* <searchBoxHTML/> */}
-      <SearchInput  ttSearchBox={ttSearchBox}/>
-      {/* <form
+<div ref={inputRef}></div>      {/* <form
         className="flex w-10/12 mx-auto bg-white p-0 overflow-hidden"
         onSubmit={onSubmit}
       >
