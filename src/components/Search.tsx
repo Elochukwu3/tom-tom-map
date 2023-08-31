@@ -9,10 +9,10 @@ const Search = () => {
   const [input, setInput] = useState("");
   const [err, setErr] = useState<string | null>(null);
   const debouncevalue = useDebounce(input);
-  const inputRef = useRef(null)
+  const inputRef = useRef<HTMLDivElement>(null);
 
   const options = {
-    idleTimePress: 100,
+    idleTimePress: 30,
     minNumberOfCharacters: 0,
     searchOptions: {
       key: apiKey,
@@ -25,19 +25,18 @@ const Search = () => {
     noResultsMessage: "No results found.",
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     const ttSearchBox = new SearchBox(services, options);
     const searchBoxElement = ttSearchBox.getSearchBoxHTML();
-    if(inputRef.current && searchBoxElement){
-      inputRef.current.innerHtml ='';
-      inputRef.current.appendChild(searchBoxElement)
+    if (inputRef.current && searchBoxElement) {
+      inputRef.current.innerHTML = "";
+      inputRef.current.appendChild(searchBoxElement);
     }
-    
 
-    return()=>{
-      ttSearchBox.onRemove()
-    }
-  }, [options])
+    return () => {
+      ttSearchBox.onRemove();
+    };
+  }, [options]);
 
   const onchange = async (e: any) => {
     setInput(e.target.value);
@@ -55,16 +54,7 @@ const Search = () => {
     }
   };
 
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (input && input.length > 4) {
-      const response = await fetch(
-        `https://api.tomtom.com/search/2/search/${input}.json?key=${TOM_TOM_API_KEY}&language=en-US`
-      );
-      const result = await response.json();
-      console.log(result);
-    }
-  };
+
   // tomtom.searchbox.resultselected
   // console.log(searchBoxHTML);
 
@@ -72,28 +62,9 @@ const Search = () => {
   // https://api.tomtom.com/search/2/autocomplete/pizza.json?key={Your_API_Key}&language=en-US
 
   return (
-    <div className="rounded-md bg-zinc-800 z-50 md:w-1/2 w-9/12 flex justify-center flex-col items-center fixed right-0 bottom-0">
+    <div className="h-96 overflow-scroll cursor-grab    rounded-md bg-zinc-800 z-50 md:w-1/2 w-9/12 flex justify-center flex-col items-center fixed right-0 bottom-1/2">
       {/* <searchBoxHTML/> */}
-<div ref={inputRef}></div>      {/* <form
-        className="flex w-10/12 mx-auto bg-white p-0 overflow-hidden"
-        onSubmit={onSubmit}
-      >
-        <button type="submit" className="text-xl font-bold px-2">
-          Q
-        </button>
-        <input
-          onChange={onchange}
-          value={input}
-          name="serch"
-          type="search"
-          autoCorrect=""
-          autoFocus={true}
-          autoComplete=""
-          className="py-2 w-full outline-none text-xl"
-          placeholder="Search for places......"
-        />
-      </form>
-      <div className="h-96 w-full  bg-white border-t-2 border-zinc-700 "></div> */}
+      <div ref={inputRef} className=""></div>
     </div>
   );
 };
