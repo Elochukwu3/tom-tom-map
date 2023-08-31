@@ -6,6 +6,7 @@ import useAddmaker from "./hooks/useAddmaker";
 import useLocation, { locationObject } from "./hooks/useLocation";
 import useTaxiCreatore from "./taxi/useTaxiCreatore";
 import useRoutes from "./taxi/useRoutes";
+import Search from "./Search";
 
 const apiKey = import.meta.env.VITE_API_MAP_KEY;
 
@@ -90,6 +91,7 @@ useEffect(() => {
 
   return (
     <div className="w-full h-screen z-30" id="map">
+      <Search/>
       <div className="marker " ref={divRef}></div>
       <button className="bg-red-700 p-3 w-1/4 absolute z-50" onClick={handler}>
         submit
