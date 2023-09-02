@@ -2,12 +2,10 @@ const apiKey = import.meta.env.VITE_API_MAP_KEY;
 import { useState, useEffect, useRef } from "react";
 // import useDebounce from "./hooks/useDbounce";
 // const TOM_TOM_API_KEY = import.meta.env.VITE_API_MAP_KEY;
-// const API_URL = `https://api.tomtom.com/search/2/autocomplete/pizza.json?key=${TOM_TOM_API_KEY}&language=en-US`;
-import SearchBox from "@tomtom-international/web-sdk-plugin-searchbox";
+  import SearchBox from "@tomtom-international/web-sdk-plugin-searchbox";
 import { services } from "@tomtom-international/web-sdk-services";
 const Search = () => {
   const [err, setErr] = useState<string | null>(null);
-  // const debouncevalue = useDebounce(input);
   const inputRef = useRef<HTMLDivElement>(null);
 
   const options = {
@@ -16,10 +14,13 @@ const Search = () => {
     searchOptions: {
       key: apiKey,
       language: "en-GB",
+      limit: 20,
+      idxSet: "POI"
     },
     autocompleteOptions: {
       key: apiKey,
       language: "en-GB",
+      resultSet: "brand"
     },
     noResultsMessage: "No results found.",
   };
@@ -51,7 +52,7 @@ const Search = () => {
     <div className="h-96 overflow-scroll cursor-grab    rounded-md bg-zinc-800 z-50 md:w-1/2 w-9/12 flex justify-center flex-col items-center fixed right-0 bottom-1/2">
       {/* <searchBoxHTML/> */}
       {err && err}
-      <div ref={inputRef} className=""></div>
+      <div ref={inputRef} className="w-full"></div>
     </div>
   );
 };

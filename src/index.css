@@ -10,3 +10,20 @@
     background-repeat: no-repeat;
     background-size: cover;
 }
+.tt-search-box-input-container{
+    display: flex !important;
+    align-items: center;
+    /* gap:; */
+    width: 100% !important;
+    justify-content: space-between;
+}
+.tt-search-box{
+    background-color: white;
+    width: 100% !important;
+    min-height: 20px;
+}
+.tt-search-box-input{
+    flex : 1 1;
+    margin: 0 10px;
+    height: 100%;
+}
