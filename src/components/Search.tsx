@@ -49,9 +49,9 @@ const Search = () => {
   // https://api.tomtom.com/search/2/autocomplete/pizza.json?key={Your_API_Key}&language=en-US
 
   return (
-    <div className="h-96 overflow-scroll cursor-grab    rounded-md bg-zinc-800 z-50 md:w-1/2 w-9/12 flex justify-center flex-col items-center fixed right-0 bottom-1/2">
+    <div className="h-96 overflow-scroll cursor-grab    rounded-md bg-zinc-00 z-50 md:w-1/2 w-9/12 flex justify-center flex-col items-center fixed right-0 bottom-1/2">
       {err && err}
-      <div ref={inputRef} className="w-full relative"></div>
+      <div ref={inputRef} className="w-1/2 relative"></div>
     </div>
   );
 };
