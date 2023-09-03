@@ -10,7 +10,7 @@ const Search = () => {
 
   const options = {
     idleTimePress: 30,
-    minNumberOfCharacters: 0,
+    minNumberOfCharacters: 3,
     searchOptions: {
       key: apiKey,
       language: "en-GB",
@@ -20,7 +20,7 @@ const Search = () => {
     autocompleteOptions: {
       key: apiKey,
       language: "en-GB",
-      resultSet: "brand"
+      // resultSet: "brand"
     },
     noResultsMessage: "No results found.",
   };
@@ -50,7 +50,6 @@ const Search = () => {
 
   return (
     <div className="h-96 overflow-scroll cursor-grab    rounded-md bg-zinc-800 z-50 md:w-1/2 w-9/12 flex justify-center flex-col items-center fixed right-0 bottom-1/2">
-      {/* <searchBoxHTML/> */}
       {err && err}
       <div ref={inputRef} className="w-full relative"></div>
     </div>
