@@ -88,7 +88,6 @@ useEffect(() => {
 
   
   const handler = () => {
-    console.log(myMap, destinationMarker);
 
     myMap &&
       destinationMarker &&
