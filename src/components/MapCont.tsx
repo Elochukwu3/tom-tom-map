@@ -46,11 +46,14 @@ const MapCont = () => {
         positionOptions: {
           enableHighAccuracy: true, 
         },
-        trackUserLocation: true, // Whether to continuously track the user's location
+        trackUserLocation: true, 
         showUserLocation: true, 
       });
-      map.addControl(geolocateControl)
 
+      map.addControl(geolocateControl)
+      geolocateControl.on("geolocate", ()=>{
+        map.setZoom(6)
+      })
       const staticIndicator = new tt.Marker({
         element: document.createElement("div"),
       })
