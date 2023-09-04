@@ -1,5 +1,5 @@
-
-    type TMapContent = {
+import * as tt from "@tomtom-international/web-sdk-maps";
+type TMapContent = {
         key : string,
         container: HTMLElement | string,
         zoom: number,
@@ -10,4 +10,7 @@
           };
     }
 
-    export type {TMapContent}
+    type myMapProp = {
+        myMap: tt.Map | null
+    } 
+    export type {TMapContent, myMapProp}

@@ -1,10 +1,12 @@
 const apiKey = import.meta.env.VITE_API_MAP_KEY;
 import { useState, useEffect, useRef } from "react";
 // import useDebounce from "./hooks/useDbounce";
-// const TOM_TOM_API_KEY = import.meta.env.VITE_API_MAP_KEY;
+import * as tt from "@tomtom-international/web-sdk-maps";
   import SearchBox from "@tomtom-international/web-sdk-plugin-searchbox";
-import * as tt from "@tomtom-international/web-sdk-services";
-const Search = () => {
+  import "@tomtom-international/web-sdk-plugin-searchbox/dist/SearchBox.css"
+  import { services } from "@tomtom-international/web-sdk-services";
+  import {myMapProp } from "./type"
+  const Search = ({myMap}:myMapProp ) => {
   const [err, setErr] = useState<string | null>(null);
   const inputRef = useRef<HTMLDivElement>(null);
 
@@ -27,35 +29,91 @@ const Search = () => {
     noResultsMessage: "No results found.",
   };
 
-  const ttSearchBox = new SearchBox(tt.services, searchBoxOptions);
-  useEffect(() => {
-    const searchBoxElement = ttSearchBox.getSearchBoxHTML();
-    if (inputRef.current && searchBoxElement) {
-      // inputRef.current.innerHTML = "";
-      inputRef.current.appendChild(searchBoxElement);
-    }else{
-      setErr("Error")
-    }
+  const ttSearchBox = new SearchBox(services, searchBoxOptions);
 
-    return () => {
-      ttSearchBox.onRemove();
-    };
-  }, [searchBoxOptions]);
+  //   function getBounds(data:any ) {
+  //   var btmRight
+  //   var topLeft
+  //   if (data.viewport) {
+  //     btmRight = [
+  //       data.viewport.btmRightPoint.lng,
+  //       data.viewport.btmRightPoint.lat,
+  //     ]
+  //     topLeft = [data.viewport.topLeftPoint.lng, data.viewport.topLeftPoint.lat]
+  //   }
+  //   return [btmRight, topLeft]
+  // }
+  function getBounds(data: any): tt.LngLatBoundsLike | null {
+  if (data.viewport) {
+    const west = data.viewport.topLeftPoint.lng;
+    const south = data.viewport.btmRightPoint.lat;
+    const east = data.viewport.btmRightPoint.lng;
+    const north = data.viewport.topLeftPoint.lat;
 
-const updateSearch = ()=>{
-  let options = ttSearchBox.getValue()
-  // options.options.boundingBox 
-  // ttSearchBox.updateOptions(options)
+    return [west, south, east, north];
+  }
+  
+  return null; // Return null if there is no valid data.viewport
 }
 
-  // tomtom.searchbox.resultselected
-  // console.log(searchBoxHTML);
 
-  // https://api.tomtom.com/search/2/search/${changedSearchText}.json?
-  // https://api.tomtom.com/search/2/autocomplete/pizza.json?key={Your_API_Key}&language=en-US
 
+  function fitToViewport(markerData:any) {
+    console.log(markerData.viewport.topLeftPoint);
+    console.log(markerData.viewport.btmRightPoint);
+    
+    if (!markerData || (markerData instanceof Array && !markerData.length)) {
+      return
+    }
+    var bounds = new tt.LngLatBounds()
+    if (markerData instanceof Array) {
+      markerData.forEach(function (marker:any) {
+      })
+    } else {
+      const markerBounds  = getBounds(markerData);
+      if (Array.isArray(markerBounds) && markerBounds.length === 2) {
+        bounds.extend(markerBounds);
+      } else if (Array.isArray(markerBounds) && markerBounds.length === 4) {
+        bounds.extend(markerBounds);
+      }
+    }
+   myMap && myMap.fitBounds(bounds, { padding: 100, linear: true })
+   
+  }
+
+  function handleResultSelection(event:any) {
+    var result = event.data.result
+    if (result.type === "category" || result.type === "brand") {
+      return
+    }
+    fitToViewport(result)
+    // const position = result.position
+    // myMap?.setCenter([position.lng, position.lat])
+  }
+ const addControl = ()=>{
+  myMap && myMap.addControl(ttSearchBox, "top-left")
+}
+
+
+useEffect(() => {
+  const searchBoxElement = ttSearchBox.getSearchBoxHTML();
+  if (inputRef.current && searchBoxElement) {
+    // inputRef.current.innerHTML = "";
+    inputRef.current.appendChild(searchBoxElement);
+  }else{
+    setErr("Error")
+  }
+  ttSearchBox.off("tomtom.searchbox.resultselected");
+  ttSearchBox.on("tomtom.searchbox.resultselected", handleResultSelection);
+
+  addControl()
+  return () => {
+    ttSearchBox.onRemove();
+    ttSearchBox.off("tomtom.searchbox.resultselected")
+  };
+}, [searchBoxOptions]);
   return (
-    <div className="h-96 overflow-scroll cursor-grab rounded-md bg-zinc-500 z-50 md:w-1/2 w-9/12 flex justify-center flex-col items-center fixed right-10 bottom-0">
+    <div className="">
       {err && err}
       <div ref={inputRef} className="w-full h-full relative">
       </div>
