@@ -1,6 +1,5 @@
 const apiKey = import.meta.env.VITE_API_MAP_KEY;
 import { useState, useEffect, useRef } from "react";
-// import useDebounce from "./hooks/useDbounce";
 import * as tt from "@tomtom-international/web-sdk-maps";
   import SearchBox from "@tomtom-international/web-sdk-plugin-searchbox";
   import "@tomtom-international/web-sdk-plugin-searchbox/dist/SearchBox.css"
@@ -24,25 +23,11 @@ import * as tt from "@tomtom-international/web-sdk-maps";
       key: apiKey,
       language: "en-GB",
       limit: 20,
-      // resultSet: "brand"
     },
     noResultsMessage: "No results found.",
   };
 
   const ttSearchBox = new SearchBox(services, searchBoxOptions);
-
-  //   function getBounds(data:any ) {
-  //   var btmRight
-  //   var topLeft
-  //   if (data.viewport) {
-  //     btmRight = [
-  //       data.viewport.btmRightPoint.lng,
-  //       data.viewport.btmRightPoint.lat,
-  //     ]
-  //     topLeft = [data.viewport.topLeftPoint.lng, data.viewport.topLeftPoint.lat]
-  //   }
-  //   return [btmRight, topLeft]
-  // }
   function getBounds(data: any): tt.LngLatBoundsLike | null {
   if (data.viewport) {
     const west = data.viewport.topLeftPoint.lng;
@@ -53,7 +38,7 @@ import * as tt from "@tomtom-international/web-sdk-maps";
     return [west, south, east, north];
   }
   
-  return null; // Return null if there is no valid data.viewport
+  return null;
 }
 
 
@@ -68,6 +53,7 @@ import * as tt from "@tomtom-international/web-sdk-maps";
     var bounds = new tt.LngLatBounds()
     if (markerData instanceof Array) {
       markerData.forEach(function (marker:any) {
+        getBounds(marker)
       })
     } else {
       const markerBounds  = getBounds(markerData);
