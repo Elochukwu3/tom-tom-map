@@ -42,6 +42,14 @@ const MapCont = () => {
 
       map.addControl(new tt.FullscreenControl());
       map.addControl(new tt.NavigationControl());
+      const geolocateControl = new tt.GeolocateControl({
+        positionOptions: {
+          enableHighAccuracy: true, 
+        },
+        trackUserLocation: true, // Whether to continuously track the user's location
+        showUserLocation: true, 
+      });
+      map.addControl(geolocateControl)
 
       const staticIndicator = new tt.Marker({
         element: document.createElement("div"),
@@ -93,9 +101,9 @@ useEffect(() => {
     <div className="w-full h-screen z-30" id="map">
      <Search myMap={myMap}/>
       <div className="marker " ref={divRef}></div>
-      <button className="bg-red-700 p-3 w-1/4 absolute z-50" onClick={handler}>
-        submit
-      </button>
+        <button className="bg-red-700 p-3 w-1/4 absolute z-50 hidden" onClick={handler}>
+          submit
+        </button>
     </div>
   );
 };
