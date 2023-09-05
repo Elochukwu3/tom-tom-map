@@ -18,4 +18,5 @@ type func = {
       position: [number, number]
     ) => tt.Marker;
   };
-export type {markerProp, func}
+  type DispatchFunc = Exclude<markerProp, "position" | "map">
+export type {markerProp, func, DispatchFunc}

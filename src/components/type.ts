@@ -11,6 +11,7 @@ type TMapContent = {
     }
 
     type myMapProp = {
-        myMap: tt.Map | null
+        myMap: tt.Map | null,
+        setDragedLngLat: React.Dispatch<React.SetStateAction<object>>
     } 
     export type {TMapContent, myMapProp}

@@ -5,9 +5,12 @@ import * as tt from "@tomtom-international/web-sdk-maps";
   import "@tomtom-international/web-sdk-plugin-searchbox/dist/SearchBox.css"
   import { services } from "@tomtom-international/web-sdk-services";
   import {myMapProp } from "./type"
-  const Search = ({myMap}:myMapProp ) => {
+import useAddmaker from "./hooks/useAddmaker";
+  const Search = ({myMap, setDragedLngLat}:myMapProp ) => {
   const [err, setErr] = useState<string | null>(null);
   const inputRef = useRef<HTMLDivElement>(null);
+  // const {addMarker} = useAddmaker();
+
 
   const searchBoxOptions = {
     idleTimePress: 30,
@@ -73,7 +76,8 @@ import * as tt from "@tomtom-international/web-sdk-maps";
       return
     }
     fitToViewport(result)
-    // const position = result.position
+    const position = result.position
+    setDragedLngLat([position.lng, position.lat])
     // myMap?.setCenter([position.lng, position.lat])
   }
  const addControl = ()=>{
