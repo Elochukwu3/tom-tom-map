@@ -8,18 +8,20 @@ const useLocation = (): locationObject => {
     lat: 52.3676,
     long: 4.9041,
   });
-
+const [err, setErr] = useState(false)
   useEffect(() => {
     const navigatorFunc = (): void => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
+            setErr(false)
             const { latitude, longitude } = position.coords;
             setLocation({ lat: latitude, long: longitude });
             // console.log(position.coords);
           },
           (error) => {
-            console.log(error);
+            console.log(error, err);
+            setErr(true)
           }
         );
       } else {
@@ -27,7 +29,7 @@ const useLocation = (): locationObject => {
       }
     };
     navigatorFunc();
-  }, []);
+  }, [location]);
 
   return location;
 };
