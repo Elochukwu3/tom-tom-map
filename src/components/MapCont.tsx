@@ -103,7 +103,7 @@ useEffect(() => {
 
   return (
     <div className="w-full h-screen z-30" id="map">
-     <Search myMap={myMap} setDragedLngLat={setDragedLngLat}/>
+     <Search myMap={myMap} setDragedLngLat={setDragedLngLat} destinationMarker= {destinationMarker} setDestinationMarker={setDestinationMarker}/>
       <div className="marker " ref={divRef}></div>
         <button className="bg-red-700 p-3 w-1/4 absolute z-50 hidden" onClick={handler}>
           submit

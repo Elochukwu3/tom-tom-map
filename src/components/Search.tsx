@@ -5,11 +5,13 @@ import * as tt from "@tomtom-international/web-sdk-maps";
   import "@tomtom-international/web-sdk-plugin-searchbox/dist/SearchBox.css"
   import { services } from "@tomtom-international/web-sdk-services";
   import {myMapProp } from "./type"
-import useAddmaker from "./hooks/useAddmaker";
-  const Search = ({myMap, setDragedLngLat}:myMapProp ) => {
+  // import { markerProp } from "./hooks/type";
+  // import useCreateTaxi from "./taxi/useCreateTaxi";
+  import useAddmaker from "./hooks/useAddmaker";
+  const Search = ({myMap, setDragedLngLat, destinationMarker, setDestinationMarker}:myMapProp ) => {
   const [err, setErr] = useState<string | null>(null);
   const inputRef = useRef<HTMLDivElement>(null);
-  // const {addMarker} = useAddmaker();
+  const {addmarker} = useAddmaker({setDragedLngLat});
 
 
   const searchBoxOptions = {
@@ -78,7 +80,27 @@ import useAddmaker from "./hooks/useAddmaker";
     fitToViewport(result)
     const position = result.position
     setDragedLngLat([position.lng, position.lat])
+
+    //  myMap.on("click", (event) => {
+    //     destinationMarker && mapClick(event, apiKey, destinationMarker, setDestinationMarker);
+    //   });
     // myMap?.setCenter([position.lng, position.lat])
+    if(destinationMarker &&  myMap){
+      destinationMarker.setLngLat(position)
+      console.log("marker existed");
+      setDestinationMarker(destinationMarker)
+      
+    }else{
+      const newDestinationMarker = addmarker(
+        myMap!,
+        new tt.Popup({ offset: [0, -30] }).setHTML(
+          "click on any part of the map"
+        ),
+        [position.lng, position.lat]
+        );
+        setDestinationMarker(newDestinationMarker)
+         console.log("new marker");
+      }
   }
  const addControl = ()=>{
   myMap && myMap.addControl(ttSearchBox, "top-left")
