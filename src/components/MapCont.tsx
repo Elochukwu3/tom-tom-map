@@ -80,6 +80,8 @@ useEffect(() => {
         destinationMarker && mapClick(event, apiKey, destinationMarker, setDestinationMarker);
       });
   };
+  console.log(destinationMarker);
+  
   mapOnclick()
   return () => {
     mapOnclick()
