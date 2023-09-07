@@ -42,7 +42,18 @@ const MapCont = () => {
 
       map.addControl(new tt.FullscreenControl());
       map.addControl(new tt.NavigationControl());
+      const geolocateControl = new tt.GeolocateControl({
+        positionOptions: {
+          enableHighAccuracy: true, 
+        },
+        trackUserLocation: true, 
+        showUserLocation: true, 
+      });
 
+      map.addControl(geolocateControl)
+      geolocateControl.on("geolocate", ()=>{
+        map.setZoom(6)
+      })
       const staticIndicator = new tt.Marker({
         element: document.createElement("div"),
       })
@@ -69,6 +80,7 @@ useEffect(() => {
         destinationMarker && mapClick(event, apiKey, destinationMarker, setDestinationMarker);
       });
   };
+  
   mapOnclick()
   return () => {
     mapOnclick()
@@ -77,7 +89,6 @@ useEffect(() => {
 
   
   const handler = () => {
-    console.log(myMap, destinationMarker);
 
     myMap &&
       destinationMarker &&
@@ -91,11 +102,11 @@ useEffect(() => {
 
   return (
     <div className="w-full h-screen z-30" id="map">
-      <Search/>
+     <Search myMap={myMap} setDragedLngLat={setDragedLngLat} destinationMarker= {destinationMarker} setDestinationMarker={setDestinationMarker}/>
       <div className="marker " ref={divRef}></div>
-      <button className="bg-red-700 p-3 w-1/4 absolute z-50" onClick={handler}>
-        submit
-      </button>
+        <button className="bg-red-700 p-3 w-1/4 absolute z-50 hidden" onClick={handler}>
+          submit
+        </button>
     </div>
   );
 };

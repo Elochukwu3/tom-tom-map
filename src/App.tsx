@@ -5,7 +5,7 @@ const MapCont = lazy(() => import("./components/MapCont"));
 function App() {
   return (
     <>
-      <div className="m-0 p-0 min-h-screen relative">
+      <div className="m-0 p-0 min-h-screen relaive">
         <Suspense
           fallback={
             <div className="h-screen bg-sky-950 w-full flex justify-center items-center ">

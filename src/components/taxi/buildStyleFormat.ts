@@ -1,6 +1,6 @@
 export function buildStyle(
     id: string,
-    data: string,
+    data: string | any,
     color: string,
     width: number
   ): tt.AnyLayer {

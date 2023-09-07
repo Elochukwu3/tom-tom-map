@@ -2,11 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-.marker{  
-    background-image: url("../image/marker.png");
-    width: 35px;
-    height: 35px;
-    object-fit: cover;
-    background-repeat: no-repeat;
-    background-size: cover;
+.marker {
+  background-image: url("../image/marker.png");
+  width: 35px;
+  height: 35px;
+  object-fit: cover;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
+
