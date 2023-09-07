@@ -19,13 +19,14 @@ const drawRouteOnSearch = (
     locations: combinedRouteLocation,
   });
   calCRoute.then((response) => {
-    const clearRoute = (map: map) => {
+    const clearRoute = () => {
         if (routeLayerId) {
           map.removeLayer(routeLayerId);
           map.removeSource(routeLayerId); // Remove the associated source as well
           routeLayerId = null; // Reset the route layer ID
         }
       };
+      clearRoute()
     console.log(response);
     console.log("response");
     // buildStyle
@@ -37,6 +38,11 @@ const drawRouteOnSearch = (
       const dataCoverter = buildStyle(layerId, geoJson, color, 9) ;
       map.addLayer(dataCoverter);
       routeLayerId = layerId
+        let bounds = new tt.LngLatBounds()
+    geoJson.features[0].geometry.coordinates.forEach(function (point:any) {
+      bounds.extend(tt.LngLat.convert(point))
+    })
+    map.fitBounds(bounds, { padding: 20 })
     }
   });
 };

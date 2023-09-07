@@ -54,8 +54,7 @@ const Search = ({
   }
 
   function fitToViewport(markerData: any) {
-    console.log(markerData.viewport.topLeftPoint);
-    console.log(markerData.viewport.btmRightPoint);
+ 
 
     if (!markerData || (markerData instanceof Array && !markerData.length)) {
       return;
