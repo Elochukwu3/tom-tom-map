@@ -80,11 +80,7 @@ import * as tt from "@tomtom-international/web-sdk-maps";
     fitToViewport(result)
     const position = result.position
     setDragedLngLat([position.lng, position.lat])
-
-    //  myMap.on("click", (event) => {
-    //     destinationMarker && mapClick(event, apiKey, destinationMarker, setDestinationMarker);
-    //   });
-    // myMap?.setCenter([position.lng, position.lat])
+    
     if(destinationMarker &&  myMap){
       destinationMarker.setLngLat(position)
       console.log("marker existed");
