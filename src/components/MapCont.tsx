@@ -44,16 +44,16 @@ const MapCont = () => {
       map.addControl(new tt.NavigationControl());
       const geolocateControl = new tt.GeolocateControl({
         positionOptions: {
-          enableHighAccuracy: true, 
+          enableHighAccuracy: true,
         },
-        trackUserLocation: true, 
-        showUserLocation: true, 
+        trackUserLocation: true,
+        showUserLocation: true,
       });
 
-      map.addControl(geolocateControl)
-      geolocateControl.on("geolocate", ()=>{
-        map.setZoom(6)
-      })
+      map.addControl(geolocateControl);
+      geolocateControl.on("geolocate", () => {
+        map.setZoom(6);
+      });
       const staticIndicator = new tt.Marker({
         element: document.createElement("div"),
       })
@@ -72,24 +72,22 @@ const MapCont = () => {
       setDestinationMarker(newDestinationMarker);
     }
   }, [location]);
-useEffect(() => {
- 
-  const mapOnclick = () => {
-    myMap &&
-      myMap.on("click", (event) => {
-        destinationMarker && mapClick(event, apiKey, destinationMarker, setDestinationMarker);
-      });
-  };
-  
-  mapOnclick()
-  return () => {
-    mapOnclick()
-  }
-}, [destinationMarker?.getLngLat()])
+  useEffect(() => {
+    const mapOnclick = () => {
+      myMap &&
+        myMap.on("click", (event) => {
+          destinationMarker &&
+            mapClick(event, apiKey, destinationMarker, setDestinationMarker);
+        });
+    };
 
-  
+    mapOnclick();
+    return () => {
+      mapOnclick();
+    };
+  }, [destinationMarker?.getLngLat()]);
+
   const handler = () => {
-
     myMap &&
       destinationMarker &&
       submitButtonHandler(
@@ -102,11 +100,19 @@ useEffect(() => {
 
   return (
     <div className="w-full h-screen z-30" id="map">
-     <Search myMap={myMap} setDragedLngLat={setDragedLngLat} destinationMarker= {destinationMarker} setDestinationMarker={setDestinationMarker}/>
+      <Search
+        myMap={myMap}
+        setDragedLngLat={setDragedLngLat}
+        destinationMarker={destinationMarker}
+        setDestinationMarker={setDestinationMarker}
+      />
       <div className="marker " ref={divRef}></div>
-        <button className="bg-red-700 p-3 w-1/4 absolute z-50 hidden" onClick={handler}>
-          submit
-        </button>
+      <button
+        className="bg-red-700 p-3 w-1/4 absolute z-50 hidden"
+        onClick={handler}
+      >
+        submit
+      </button>
     </div>
   );
 };
