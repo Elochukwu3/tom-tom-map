@@ -22,8 +22,8 @@ const drawRouteOnSearch = (
     const clearRoute = () => {
         if (routeLayerId) {
           map.removeLayer(routeLayerId);
-          map.removeSource(routeLayerId); // Remove the associated source as well
-          routeLayerId = null; // Reset the route layer ID
+          map.removeSource(routeLayerId); 
+          routeLayerId = null; 
         }
       };
       clearRoute()
