@@ -29,7 +29,7 @@ const [err, setErr] = useState(false)
       }
     };
     navigatorFunc();
-  }, [location]);
+  }, []);
 
   return location;
 };
